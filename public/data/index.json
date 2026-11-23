@@ -1,0 +1,22 @@
+{
+  "latest": "2026-11-23",
+  "updatedAt": "2026-11-23T08:00:00+08:00",
+  "issues": [
+    {
+      "date": "2026-11-23",
+      "displayDate": "2026年11月23日 星期一",
+      "neigongTitle": "一物三喻与镜头蒙太奇：把抽象情绪落回具体器物",
+      "coreTechnique": "一物三喻",
+      "songCount": 10,
+      "quoteCount": 20
+    },
+    {
+      "date": "2026-11-22",
+      "displayDate": "2026年11月22日 星期日",
+      "neigongTitle": "韵脚的疏密与词的呼吸",
+      "coreTechnique": "声韵呼吸",
+      "songCount": 2,
+      "quoteCount": 4
+    }
+  ]
+}

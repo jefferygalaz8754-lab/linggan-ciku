@@ -1,0 +1,9 @@
+name = "linggan-ciku-feedback"
+main = "feedback-worker.js"
+compatibility_date = "2026-01-01"
+
+# 部署前请先运行 `npx wrangler kv namespace create LINGGAN_KV`
+# 并将返回的 id 填入下方：
+[[kv_namespaces]]
+binding = "LINGGAN_KV"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"

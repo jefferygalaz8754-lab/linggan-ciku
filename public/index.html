@@ -1,0 +1,2648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>灵感词库 · 每日歌词摘录、金句粮草与作词内功</title>
+  <style>
+    :root {
+      --bg-top: #2a5192;
+      --bg-mid: #3868b2;
+      --bg-bot: #224276;
+      --surface: rgba(14, 34, 68, 0.34);
+      --surface-strong: rgba(11, 27, 56, 0.56);
+      --surface-hover: rgba(18, 43, 84, 0.52);
+      --text-primary: #f7f9fc;
+      --text-secondary: rgba(247, 249, 252, 0.88);
+      --text-muted: rgba(247, 249, 252, 0.72);
+      --accent-gold: #f3de8a;
+      --accent-gold-soft: rgba(243, 222, 138, 0.14);
+      --accent-gold-border: rgba(243, 222, 138, 0.42);
+      --hairline: rgba(255, 255, 255, 0.18);
+      --hairline-strong: rgba(255, 255, 255, 0.32);
+      --danger: #ffb4a9;
+      --ok: #a7f3d0;
+      --font-serif: "Noto Serif SC", "Songti SC", "STSong", "SimSun", Georgia, serif;
+      --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-bot);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-sans);
+      color: var(--text-primary);
+      background: linear-gradient(165deg, var(--bg-top) 0%, var(--bg-mid) 44%, var(--bg-bot) 100%);
+      background-attachment: fixed;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, select, input, textarea { font-family: inherit; color: inherit; }
+
+    /* Top Nav */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: rgba(40, 77, 138, 0.78);
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .topbar-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      text-align: left;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1.25px solid rgba(255, 255, 255, 0.72);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.06);
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 19px;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      padding: 4px 2px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      position: relative;
+      transition: color 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .nav-btn:hover { color: #ffffff; }
+    .nav-btn.active {
+      color: #ffffff;
+      font-weight: 500;
+    }
+    .nav-btn.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -4px;
+      height: 1.5px;
+      background: var(--accent-gold);
+    }
+
+    .nav-count {
+      font-size: 11px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: rgba(243, 222, 138, 0.2);
+      color: var(--accent-gold);
+      border: 1px solid rgba(243, 222, 138, 0.35);
+    }
+
+    .search-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--hairline-strong);
+      background: rgba(14, 34, 68, 0.28);
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .search-trigger:hover {
+      background: rgba(14, 34, 68, 0.5);
+      border-color: rgba(255, 255, 255, 0.55);
+      color: #fff;
+    }
+
+    .kbd {
+      font-size: 11px;
+      opacity: 0.72;
+      padding: 0 5px;
+      border-radius: 4px;
+      border: 1px solid var(--hairline);
+    }
+
+    /* Container */
+    .page-wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 28px 20px 88px;
+      position: relative;
+    }
+
+    /* Issue Bar */
+    .issue-bar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      padding-bottom: 22px;
+      border-bottom: 1px solid var(--hairline);
+      margin-bottom: 22px;
+    }
+
+    .issue-meta-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      border: 1px solid var(--hairline-strong);
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.06);
+      white-space: nowrap;
+    }
+
+    .pill-gold {
+      border-color: var(--accent-gold-border);
+      background: var(--accent-gold-soft);
+      color: var(--accent-gold);
+    }
+
+    .pill-ok {
+      border-color: rgba(167, 243, 208, 0.35);
+      background: rgba(167, 243, 208, 0.1);
+      color: var(--ok);
+    }
+
+    .issue-date {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      margin: 0;
+    }
+
+    .issue-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 4px 0 0;
+    }
+
+    .issue-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--hairline-strong);
+      background: rgba(255, 255, 255, 0.05);
+      font-size: 13px;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: background 0.16s ease, border-color 0.16s ease, opacity 0.16s ease;
+    }
+
+    .btn-outline:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .btn-outline:disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+    }
+
+    .btn-gold {
+      border-color: var(--accent-gold-border);
+      background: var(--accent-gold-soft);
+      color: var(--accent-gold);
+    }
+
+    .btn-gold:hover:not(:disabled) {
+      background: rgba(243, 222, 138, 0.24);
+      border-color: var(--accent-gold);
+    }
+
+    .date-select {
+      appearance: none;
+      padding: 6px 28px 6px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--hairline-strong);
+      background: rgba(14, 34, 68, 0.45) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23f7f9fc' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;
+      font-size: 13px;
+      color: var(--text-primary);
+      cursor: pointer;
+    }
+
+    .date-select option {
+      background: #1f3c70;
+      color: #f7f9fc;
+    }
+
+    /* Filter Bar (Optimization B) */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      margin-bottom: 30px;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--hairline);
+      background: transparent;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .filter-chip.active {
+      border-color: var(--accent-gold-border);
+      background: var(--accent-gold-soft);
+      color: var(--accent-gold);
+    }
+
+    .filter-select {
+      padding: 4px 26px 4px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--hairline);
+      background: rgba(14, 34, 68, 0.42) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%23f7f9fc' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 9px center;
+      appearance: none;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .filter-select option { background: #1f3c70; color: #f7f9fc; }
+
+    /* Section Headers */
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 12px 0 22px;
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      margin: 0;
+    }
+
+    .section-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Song Card */
+    .song-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .song-card {
+      display: grid;
+      grid-template-columns: 78px 1fr;
+      gap: 24px;
+      padding: 30px 0;
+      border-top: 1px solid var(--hairline);
+      transition: background 0.25s ease;
+      position: relative;
+    }
+
+    .song-card:last-child {
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .song-card.pulse-highlight {
+      background: rgba(243, 222, 138, 0.1);
+      border-radius: 12px;
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+
+    .song-aside {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding-top: 2px;
+    }
+
+    .song-num {
+      font-family: var(--font-serif);
+      font-size: 32px;
+      line-height: 1;
+      color: var(--accent-gold);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .genre-vertical {
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      font-size: 12px;
+      letter-spacing: 0.24em;
+      color: var(--text-muted);
+      padding: 8px 4px;
+      border-left: 1px solid var(--hairline);
+    }
+
+    .song-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .song-title-line {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .song-title {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .song-artist {
+      font-size: 15px;
+      color: var(--text-secondary);
+    }
+
+    .song-lyricist {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    .song-tags {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    /* Neigong Link Banner (Optimization C) */
+    .neigong-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 9px 14px;
+      border-radius: 10px;
+      background: var(--accent-gold-soft);
+      border: 1px solid var(--accent-gold-border);
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: var(--accent-gold);
+    }
+
+    .neigong-jump {
+      background: none;
+      border: none;
+      color: var(--accent-gold);
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      padding: 0;
+    }
+
+    /* Lyric Lines */
+    .lyric-block {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      line-height: 1.95;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+    }
+
+    .lyric-line {
+      display: block;
+      padding: 2px 10px 2px 8px;
+      margin-left: -8px;
+      border-radius: 6px;
+      border-left: 2px solid transparent;
+      cursor: pointer;
+      transition: background 0.14s ease, border-color 0.14s ease;
+    }
+
+    .lyric-line:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .lyric-line.hl {
+      border-left-color: var(--accent-gold);
+      background: rgba(243, 222, 138, 0.09);
+    }
+
+    .lyric-line .line-hint {
+      opacity: 0;
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: var(--accent-gold);
+      margin-left: 10px;
+      transition: opacity 0.14s ease;
+    }
+
+    .lyric-line:hover .line-hint { opacity: 0.9; }
+
+    /* Bilingual Switch & Translation Box (Optimization E) */
+    .bilingual-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .mode-switch {
+      display: inline-flex;
+      padding: 2px;
+      border-radius: 999px;
+      background: rgba(14, 34, 68, 0.44);
+      border: 1px solid var(--hairline);
+    }
+
+    .mode-btn {
+      border: none;
+      background: transparent;
+      padding: 3px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .mode-btn.active {
+      background: rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+    }
+
+    .translation-card {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 10px;
+      padding: 15px 18px;
+      margin-bottom: 16px;
+    }
+
+    .translation-label {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: var(--accent-gold);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .translation-lines {
+      font-family: var(--font-serif);
+      font-size: 15.5px;
+      line-height: 1.9;
+      color: var(--text-secondary);
+    }
+
+    .bilingual-pair {
+      padding: 6px 10px 6px 8px;
+      margin-left: -8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.14s ease;
+    }
+
+    .bilingual-pair:hover { background: rgba(255, 255, 255, 0.08); }
+    .bilingual-orig {
+      font-family: var(--font-serif);
+      font-size: 16.5px;
+      color: var(--text-primary);
+      line-height: 1.65;
+    }
+    .bilingual-zh {
+      font-family: var(--font-serif);
+      font-size: 14.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-top: 2px;
+    }
+
+    /* Reason & Actions */
+    .reason-box {
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      margin-top: 8px;
+      margin-bottom: 16px;
+    }
+
+    .reason-label {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .reason-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .action-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .act-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--hairline);
+      background: rgba(255, 255, 255, 0.04);
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .act-btn:hover {
+      background: rgba(255, 255, 255, 0.13);
+      border-color: var(--hairline-strong);
+      color: #ffffff;
+    }
+
+    .act-btn.liked {
+      border-color: var(--accent-gold-border);
+      background: var(--accent-gold-soft);
+      color: var(--accent-gold);
+    }
+
+    
+    /* Inline Audio / Full-Track Player */
+    .player-panel {
+      margin: 14px 0 16px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(10, 26, 54, 0.58);
+      border: 1px solid var(--accent-gold-border);
+    }
+    .player-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      font-size: 12.5px;
+      color: var(--accent-gold);
+    }
+    .yt-frame-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-height: 260px;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #081326;
+    }
+    .yt-frame-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .audio-native {
+      width: 100%;
+      height: 38px;
+      border-radius: 8px;
+    }
+    .act-btn.playing {
+      border-color: var(--accent-gold);
+      background: rgba(243, 222, 138, 0.22);
+      color: var(--accent-gold);
+    }
+
+    /* Dislike Popover */
+    .dislike-wrap { position: relative; display: inline-block; }
+
+    .dislike-menu {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 0;
+      min-width: 220px;
+      background: #17305c;
+      border: 1px solid var(--hairline-strong);
+      border-radius: 10px;
+      padding: 6px;
+      box-shadow: 0 12px 32px rgba(6, 15, 34, 0.45);
+      z-index: 30;
+    }
+
+    .dislike-option {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 8px 10px;
+      border-radius: 7px;
+      font-size: 12.5px;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: block;
+    }
+
+    .dislike-option:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .dislike-option small {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Quotes Grid */
+    .quotes-section {
+      margin-top: 56px;
+      padding-top: 10px;
+    }
+
+    .quotes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .quote-card {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      transition: background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .quote-card:hover {
+      background: var(--surface-hover);
+      border-color: var(--hairline-strong);
+    }
+
+    .quote-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .quote-num {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      color: var(--accent-gold);
+    }
+
+    .quote-text {
+      font-family: var(--font-serif);
+      font-size: 15.5px;
+      line-height: 1.85;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .quote-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .mini-tag {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--hairline);
+      color: var(--text-muted);
+    }
+
+    .quote-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      flex-wrap: wrap;
+    }
+
+    .quote-source {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    .quote-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon-btn {
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--hairline);
+      background: transparent;
+      font-size: 12px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .icon-btn:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+    .icon-btn.liked { border-color: var(--accent-gold-border); color: var(--accent-gold); background: var(--accent-gold-soft); }
+
+    /* Right Floating Index Rail (Optimization E) */
+    .index-rail {
+      position: fixed;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 8px 6px;
+      border-radius: 999px;
+      background: rgba(14, 34, 68, 0.42);
+      border: 1px solid var(--hairline);
+      backdrop-filter: blur(8px);
+      z-index: 25;
+    }
+
+    .rail-btn {
+      border: none;
+      background: transparent;
+      font-size: 11px;
+      padding: 4px 6px;
+      border-radius: 999px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .rail-btn:hover, .rail-btn.active {
+      background: var(--accent-gold-soft);
+      color: var(--accent-gold);
+    }
+
+    /* Subpages: Likes & Neigong */
+    .subpage-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--hairline);
+      margin-bottom: 24px;
+    }
+
+    .tabs-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .tab-btn {
+      padding: 7px 15px;
+      border-radius: 999px;
+      border: 1px solid var(--hairline);
+      background: rgba(14, 34, 68, 0.25);
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      border-color: var(--accent-gold-border);
+      background: var(--accent-gold-soft);
+      color: var(--accent-gold);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 56px 20px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      color: var(--text-secondary);
+    }
+
+    .neigong-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .neigong-card {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 14px;
+      padding: 22px 24px;
+      cursor: pointer;
+      transition: background 0.18s ease, border-color 0.18s ease;
+      text-align: left;
+      width: 100%;
+    }
+
+    .neigong-card:hover {
+      background: var(--surface-hover);
+      border-color: var(--hairline-strong);
+    }
+
+    .neigong-article {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .neigong-article h1 {
+      font-family: var(--font-serif);
+      font-size: 30px;
+      line-height: 1.4;
+      margin: 12px 0 18px;
+    }
+
+    .neigong-section {
+      padding-top: 22px;
+      margin-top: 22px;
+      border-top: 1px solid var(--hairline);
+    }
+
+    .neigong-section h2 {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      color: var(--accent-gold);
+      margin: 0 0 12px;
+    }
+
+    .neigong-section p {
+      font-family: var(--font-serif);
+      font-size: 16.5px;
+      line-height: 1.95;
+      color: var(--text-secondary);
+      margin: 0 0 14px;
+    }
+
+    .linked-examples {
+      margin-top: 30px;
+      padding: 20px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--accent-gold-border);
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 19, 42, 0.72);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 60;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal-panel {
+      width: 100%;
+      max-width: 620px;
+      max-height: 84vh;
+      overflow-y: auto;
+      background: #1b386b;
+      border: 1px solid var(--hairline-strong);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 24px 64px rgba(4, 12, 30, 0.55);
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .modal-title {
+      font-family: var(--font-serif);
+      font-size: 19px;
+      margin: 0;
+    }
+
+    .input-field, .textarea-field {
+      width: 100%;
+      padding: 10px 13px;
+      border-radius: 10px;
+      border: 1px solid var(--hairline-strong);
+      background: rgba(11, 27, 56, 0.55);
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .input-field:focus, .textarea-field:focus {
+      border-color: var(--accent-gold);
+    }
+
+    .search-result-item {
+      width: 100%;
+      text-align: left;
+      background: rgba(14, 34, 68, 0.36);
+      border: 1px solid var(--hairline);
+      border-radius: 10px;
+      padding: 11px 14px;
+      margin-top: 8px;
+      cursor: pointer;
+      display: block;
+    }
+
+    .search-result-item:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--accent-gold-border);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(18px);
+      background: rgba(12, 28, 58, 0.94);
+      border: 1px solid var(--accent-gold-border);
+      color: var(--text-primary);
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 13.5px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.22s ease;
+      z-index: 80;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 1180px) {
+      .index-rail { display: none; }
+    }
+
+    @media (max-width: 900px) {
+      .quotes-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-inner { padding: 12px 14px; }
+      .nav-links { gap: 10px; }
+      .kbd { display: none; }
+      .song-card { grid-template-columns: 1fr; gap: 12px; padding: 24px 0; }
+      .song-aside { flex-direction: row; align-items: center; justify-content: flex-start; gap: 10px; }
+      .genre-vertical { writing-mode: horizontal-tb; letter-spacing: 0.06em; border-left: none; border-bottom: 1px solid var(--hairline); padding: 2px 6px; }
+      .quotes-grid { grid-template-columns: 1fr; }
+      .issue-date { font-size: 21px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <button class="brand" id="brandHomeBtn" type="button" aria-label="返回灵感词库首页">
+        <span class="brand-mark">秦</span>
+        <span class="brand-title">灵感词库</span>
+      </button>
+      <nav class="nav-links" id="topNav"></nav>
+    </div>
+  </header>
+
+  <main class="page-wrap" id="appRoot"></main>
+  <aside class="index-rail" id="indexRail" aria-label="快捷目录"></aside>
+
+  <!-- 全库跨期搜索弹窗 -->
+  <div class="modal-backdrop" id="searchModal" role="dialog" aria-modal="true" aria-label="全库跨期搜索">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h3 class="modal-title">全库跨期搜索</h3>
+        <button class="btn-outline" type="button" id="closeSearchBtn">关闭</button>
+      </div>
+      <input class="input-field" id="searchInput" type="search" placeholder="搜索歌名、歌手、词人、歌词关键词、金句、情绪或技法（如：一物三喻、林夕、海浪）…" />
+      <div id="searchResults" style="margin-top: 10px;"></div>
+    </div>
+  </div>
+
+  <!-- 单句灵感本弹窗 -->
+  <div class="modal-backdrop" id="noteModal" role="dialog" aria-modal="true" aria-label="记入单句灵感本">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h3 class="modal-title">收入单句灵感本</h3>
+        <button class="btn-outline" type="button" id="closeNoteBtn">取消</button>
+      </div>
+      <div id="noteQuotePreview" style="font-family: var(--font-serif); font-size: 17px; padding: 12px 14px; border-left: 2px solid var(--accent-gold); background: rgba(14,34,68,0.45); border-radius: 8px; margin-bottom: 12px;"></div>
+      <div id="noteQuoteSource" style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 14px;"></div>
+      <label style="display:block; font-size:13px; margin-bottom:6px;">写一句你的作词批注（可选）</label>
+      <textarea class="textarea-field" id="noteTextInput" rows="3" placeholder="例如：用具体动作代替直白情绪，适合副歌前两句转折…"></textarea>
+      <label style="display:block; font-size:13px; margin:12px 0 6px;">自定义标签（可选）</label>
+      <input class="input-field" id="noteTagInput" type="text" placeholder="如：意象参考 / 副歌金句 / 城市夜色" />
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+        <button class="btn-outline btn-gold" type="button" id="saveNoteBtn">保存到灵感本</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- D1 云端同步与 JSON 导入弹窗 -->
+  <div class="modal-backdrop" id="syncModal" role="dialog" aria-modal="true" aria-label="数据导入与 D1 云端同步设置">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h3 class="modal-title">数据导入与 D1 云端同步</h3>
+        <button class="btn-outline" type="button" id="closeSyncBtn">关闭</button>
+      </div>
+      <p style="font-size:13px; color:var(--text-secondary); margin-top:0;">
+        部署 D1 架构中的 Cloudflare Worker 后，填入你的 <code>https://</code> 状态接口，即可跨设备同步点赞、两级差评与灵感本，并供次日早 8 点 GitHub Actions 读取偏好（最多 50% 席位倾斜）。
+      </p>
+      <label style="display:block; font-size:12.5px; margin-bottom:5px;">Cloudflare Worker API 地址（可选）</label>
+      <input class="input-field" id="workerUrlInput" type="url" placeholder="https://linggan-ciku-feedback.yourname.workers.dev/api/state" />
+      <label style="display:block; font-size:12.5px; margin:10px 0 5px;">Bearer Token（可选）</label>
+      <input class="input-field" id="workerTokenInput" type="password" placeholder="与 Worker API_TOKEN 一致" />
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;">
+        <button class="btn-outline btn-gold" type="button" id="saveSyncBtn">保存并测试同步</button>
+        <button class="btn-outline" type="button" id="pullSyncBtn">从云端拉取</button>
+      </div>
+
+      <div style="border-top:1px solid var(--hairline); margin-top:20px; padding-top:16px;">
+        <div style="font-size:13.5px; font-weight:500; margin-bottom:8px;">手动导入新期次 JSON（预览/离线体验）</div>
+        <textarea class="textarea-field" id="importJsonInput" rows="4" placeholder="粘贴符合每日格式规范的 JSON，点击导入后立即加入期次下拉菜单…"></textarea>
+        <div style="display:flex; justify-content:flex-end; margin-top:10px;">
+          <button class="btn-outline" type="button" id="importJsonBtn">导入期次</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toastBar" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      const ENABLE_REMOTE_DATA_FETCH = true;
+      const SEED_ISSUES = [{"date": "2026-11-23", "weekday": "星期一", "displayDate": "2026年11月23日 星期一", "issueLabel": "最新一期", "summary": "7 首中文（港台经典 3 · 独立民谣摇滚 2 · 新人新作 2）· 3 首外文附双语对照 · 20 条金句 · 1 篇内功", "neigong": {"date": "2026-11-23", "title": "一物三喻与镜头蒙太奇：把抽象情绪落回具体器物", "coreTechnique": "一物三喻", "secondaryTechniques": ["电影蒙太奇", "白描反差"], "linkedSongIds": ["2026-11-23-01", "2026-11-23-02", "2026-11-23-05"], "excerpt": "口水歌最大的毛病，是在主歌就迫不及待地喊出“好痛”“好孤独”。真正耐听的词作，往往只把镜头对准一串尚未熟透的葡萄、一罐热茶或一只打碎的花瓶，让器物自己替情绪说话。", "sections": [{"heading": "一、为什么“直接写情绪”总是显得廉价？", "paragraphs": ["当你在歌词里写下“我彻底崩溃”“撕心裂肺”时，听众的大脑其实很难产生画面——因为抽象情绪词是结论，而不是证据。好歌词的底层逻辑恰恰相反：把结论藏起来，只递给听众可触摸的温度、光影、动作与具体物件。", "在华语词坛的经典谱系里，林夕、黄伟文、万晓利与姬赓虽然风格迥异，却共享同一个习惯：先锚定一个物理世界里真实存在的意象，再让时间与人际关系附着在它身上。"]}, {"heading": "二、一物三喻：黄伟文如何把“葡萄”写成人生哲学", "paragraphs": ["对照本期第 01 首《葡萄成熟时》：第一层是物理层（“差不多冬至，一早一晚还是有雨”“你最尾等到只有这枯枝”），先建立季节湿冷与农事失收的实感；第二层是关系层（“苦恋几多次，悉心栽种全力灌注”），将耕耘与感情的投入回报错位对应；第三层在副歌升华到哲学层（“或者要到你将爱酿成醇酒，时机先至熟透”），从等待他人转向时间与自我的发酵。", "同一物件贯穿三层，比东一榔头西一棒槌地堆砌十个华丽比喻更有结构凝聚力。"]}, {"heading": "三、电影蒙太奇推拉：林夕在《再见二丁目》里的镜头调度", "paragraphs": ["看本期第 02 首《再见二丁目》开篇：“满街脚步突然静了 / 满天柏树突然没有动摇”。这是典型的远景切特写——不写“我失恋了”，只写街声骤停、树影静止的心理静音感；紧接着特写落到“一罐热茶吧”，用掌心的温度接住异国街头的空荡。", "而在本期第 05 首万晓利《这一切没有想象的那么糟》里，镜头则转向了笨拙的日常失手：“想捕捉一只美丽蜻蜓，却打碎自己心爱的花瓶”。先写具体狼狈，再用“燕子飞回了屋檐下的巢”完成反差安慰，克制却极有力量。"]}, {"heading": "四、今日立即可做的 10 分钟作词练习", "paragraphs": ["1. 从你手边挑一件普通器物（例如冷掉的咖啡杯、旧钥匙、起雾的眼镜、失修的电梯）。", "2. 禁止出现“爱、恨、痛、孤独、悲伤、眼泪”六个词，写 4 句主歌：前 2 句只写物件的材质、光线或声音（物理层），后 2 句写一个人在它旁边做出的微动作（关系层）。", "3. 用 2 句副歌收束，把物件的状态反转成你对时间或关系的态度（哲学层）。写完后大声念一遍，删掉所有为了凑韵而加的虚词。"]}]}, "songs": [{"id": "2026-11-23-01", "index": "01", "title": "葡萄成熟时", "artist": "陈奕迅", "lyricist": "黄伟文", "language": "中文", "category": "港台流行顶级词作", "genreVertical": "粤语叙事流行", "emotion": "克制释怀", "technique": "一物三喻", "neigongMatch": {"note": "今日内功示范：用“冬至枯枝→悉心栽种→酿成醇酒”完成一物三喻三层递进", "highlightLines": [0, 2, 7, 10]}, "lines": ["差不多冬至 一早一晚还是有雨", "当初的坚持现已令你很怀疑 很怀疑", "你最尾等到只有这枯枝", "苦恋几多次 悉心栽种全力灌注", "所得竟不如别个后辈收成时", "这一次你真的很介意", "问到何时葡萄先熟透 你要静候再静候", "就算失收始终要守", "日后尽量别教今天的泪白流", "留低击伤你的石头 从错误里吸收", "或者要到你将爱酿成醇酒 时机先至熟透"], "reason": "黄伟文“成熟男人玩物志”代表作，以农事耕作隐喻感情与人生的迟熟，全篇不见一句声嘶力竭，却把失收与自救写得极具分量。", "verification": {"status": "verified", "method": "原词核验通过", "sourceName": "翡翠粤语歌词", "sourceUrl": "https://www.feitsui.com/zh-hans/lyrics/2"}, "audio": {"youtubeId": "NCsVnmmNA3E", "previewUrl": ""}}, {"id": "2026-11-23-02", "index": "02", "title": "再见二丁目", "artist": "杨千嬅", "lyricist": "林夕", "language": "中文", "category": "港台流行顶级词作", "genreVertical": "都市粤语抒情", "emotion": "清冷顿悟", "technique": "电影蒙太奇", "neigongMatch": {"note": "今日内功示范：远景（满街脚步/满天柏树）骤切近景（一罐热茶），以环境静音折射心境", "highlightLines": [0, 1, 2, 6]}, "lines": ["满街脚步突然静了", "满天柏树突然没有动摇", "这一刹我只需要一罐热茶吧", "那味道似是什么都不紧要", "唱片店内传来异国民谣", "那种快乐突然被我需要", "原来过得很快乐 只我一人未发觉", "如能忘掉渴望 岁月长 衣裳薄", "无论于什么角落 不假设你或会在旁"], "reason": "林夕旅日失约后的即景之作，“岁月长，衣裳薄”六个字用极简白描撑开整首词的留白与苍凉感。", "verification": {"status": "verified", "method": "原词核验通过", "sourceName": "KKBOX 官方词库", "sourceUrl": "https://www.kkbox.com/sg/sc/song/5-ksIbA-i4L5pSM-7H"}, "audio": {"youtubeId": "zBnibfbJ-fs", "previewUrl": ""}}, {"id": "2026-11-23-03", "index": "03", "title": "寻人启事", "artist": "徐佳莹", "lyricist": "Hush", "language": "中文", "category": "港台流行顶级词作", "genreVertical": "叙事流行抒情", "emotion": "温柔悬念", "technique": "拟物化虚为实", "lines": ["让我看看你的照片", "究竟为什么你消失不见", "多数时间你在哪边", "会不会疲倦 你思念着谁", "而世界的粗糙 让我去到你身边难一些", "而缘份的细腻 又清楚地浮现你的脸", "我多想找到你 轻捧你的脸", "我会张开我双手 抚摸你的背", "请让我拥有你 失去的时间", "在你流泪之前 保管你的泪"], "reason": "Hush 用“粗糙的世界”与“细腻的缘分”形成触觉对仗，把抽象的思念具象为“拥有你失去的时间”与“保管你的泪”。", "verification": {"status": "verified", "method": "原词核验通过", "sourceName": "KKBOX 官方词库", "sourceUrl": "https://www.kkbox.com/sg/sc/song/KrJzmfRn6Il0BHD01u"}, "audio": {"youtubeId": "tp0tMGjylNQ", "previewUrl": ""}}, {"id": "2026-11-23-04", "index": "04", "title": "秦皇岛", "artist": "万能青年旅店", "lyricist": "姬赓", "language": "中文", "category": "独立 / 摇滚 / 民谣", "genreVertical": "北方独立摇滚", "emotion": "幽暗孤绝", "technique": "具象隐喻", "lines": ["站在能分割世界的桥", "还是看不清", "在那些时刻", "遮蔽我们黑暗的心", "究竟是什么", "住在我心里孤独的", "孤独的海怪 痛苦之王", "开始厌倦 深海的光 停滞的海浪"], "reason": "姬赓用极少字数构建出极具压迫感的空间意象，“深海的光”与“停滞的海浪”把抑郁与困顿写成一座可被凝视的雕塑。", "verification": {"status": "verified", "method": "原词核验通过", "sourceName": "KKBOX 官方词库", "sourceUrl": "https://www.kkbox.com/sg/sc/song/PYvEzonCNHxJvQpP3A"}, "audio": {"youtubeId": "riimzCA89bA", "previewUrl": ""}}, {"id": "2026-11-23-05", "index": "05", "title": "这一切没有想象的那么糟", "artist": "万晓利", "lyricist": "万晓利", "language": "中文", "category": "独立 / 摇滚 / 民谣", "genreVertical": "北方叙事民谣", "emotion": "困顿安慰", "technique": "白描反差", "neigongMatch": {"note": "今日内功示范：用“捉蜻蜓碎花瓶”的笨拙失手反衬“燕子归巢”的低处站立", "highlightLines": [0, 1, 2, 3]}, "lines": ["想捕捉一只美丽蜻蜓 却打碎自己心爱的花瓶", "燕子飞回了屋檐下的巢 这一切没有想象的那么糟", "每天都要精心的灌溉 兰花却一天天的垂败", "清风送来了杏花香 这一切没有想象的那么糟", "你最严重的病情 是总在怀疑自己的病", "就算命运真的坏到透顶 你也别急着把自己否决掉"], "reason": "内地新民谣关键作品，用日常失手与生活裂缝反写安慰，不居高临下说教，标题本身就是一种低处的站立。", "verification": {"status": "verified", "method": "原词核验通过", "sourceName": "官方 MV 存档", "sourceUrl": "https://www.youtube.com/watch?v=wDGCngHe0FA"}, "audio": {"youtubeId": "wDGCngHe0FA", "previewUrl": ""}}, {"id": "2026-11-23-06", "index": "06", "title": "明室", "artist": "洪佩瑜", "lyricist": "王小苗", "language": "中文", "category": "近五年新人新作", "genreVertical": "独立流行叙事", "emotion": "自省通透", "technique": "二元对立", "lines": ["有光的时候 遗漏了黑暗", "陷入黑暗的时候 忘了有光存在", "挥拳战斗的时候 忘了可以逃走", "得意自己聪明的时候 忽略了他人的存在", "堆满杂物的新房间", "沉默地接住所有来不及整理的情绪"], "reason": "金曲最佳新人专辑同名曲，王小苗用一连串工整却不刻板的二元悖论，写出当代人自我觉察时的盲区与和解。", "verification": {"status": "verified", "method": "原词核验通过", "sourceName": "KKBOX 官方词库", "sourceUrl": "https://www.kkbox.com/tw/tc/song/4qzaoI2MWUFouc_geq"}, "audio": {"youtubeId": "ZVJPOAfOuiA", "previewUrl": ""}}, {"id": "2026-11-23-07", "index": "07", "title": "海浪", "artist": "deca joins", "lyricist": "郑敬儒", "language": "中文", "category": "近五年新人新作", "genreVertical": "台北独立摇滚", "emotion": "倦怠抽离", "technique": "口语白描", "lines": ["盼着 望着 但明天太远了", "我还等待着 被拖延的人生", "但我习惯了", "生活是沉闷和孤单的总和", "我是个悲哀的空壳", "我们走着 顺着淡水河"], "reason": "极度松弛的口语短句，把“被拖延的人生”与具体地标“淡水河”并置，毫无修辞炫技却精准击中都市倦怠感。", "verification": {"status": "verified", "method": "原词核验通过", "sourceName": "KKBOX 官方词库", "sourceUrl": "https://www.kkbox.com/sg/sc/song/1YLKCeiT0OlxpmP8Yg"}, "audio": {"youtubeId": "oVdizI8ScLk", "previewUrl": ""}}, {"id": "2026-11-23-08", "index": "08", "title": "No Surprises", "artist": "Radiohead", "lyricist": "Thom Yorke", "language": "外文", "category": "外文经典", "genreVertical": "英伦另类摇滚", "emotion": "疲惫疏离", "technique": "温柔反讽", "lines": ["A heart that's full up like a landfill", "A job that slowly kills you", "Bruises that won't heal", "You look so tired, unhappy", "I'll take a quiet life", "A handshake of carbon monoxide", "And no alarms and no surprises", "Such a pretty house and such a pretty garden"], "translations": ["一颗像垃圾填埋场一样塞满的心", "一份慢慢消耗你的工作", "以及无法愈合的淤青", "你看起来如此疲惫，如此不快乐", "我要一种安静的生活", "与一氧化碳轻轻握手", "没有警报，也没有意外", "多么漂亮的房子，多么漂亮的花园"], "reason": "摇篮曲般的清脆编曲包裹着令人窒息的现代生活疲惫，“与一氧化碳握手”是极高明也极冰冷的具象反讽。", "verification": {"status": "verified", "method": "原词核验通过", "sourceName": "Explained in English / 歌词原文", "sourceUrl": "https://explainedinenglish.com/podcast/nosurprises.html"}, "audio": {"youtubeId": "nXWcR9Uomkw", "previewUrl": ""}}, {"id": "2026-11-23-09", "index": "09", "title": "Suzanne", "artist": "Leonard Cohen", "lyricist": "Leonard Cohen", "language": "外文", "category": "外文经典", "genreVertical": "蒙特利尔诗谣", "emotion": "清冷虔诚", "technique": "意象并置", "lines": ["Suzanne takes you down to her place near the river", "You can hear the boats go by, you can spend the night beside her", "And she shows you where to look among the garbage and the flowers", "There are heroes in the seaweed", "There are children in the morning", "They are leaning out for love and they will lean that way forever", "While Suzanne holds the mirror", "And you want to travel with her, and you want to travel blind"], "translations": ["苏珊带你走下河畔她的居所", "你能听见船只驶过，能在她身旁度过整夜", "她指给你看，如何在垃圾与花朵之间寻找目光的落点", "海藻里有英雄沉浮", "晨光里有孩童奔跑", "他们探身渴望爱，而且会永远那样探身下去", "而苏珊只是静静举着镜子", "你想随她远行，哪怕蒙上双眼盲目同行"], "reason": "将“垃圾与花朵”“海藻里的英雄”并置，示范了叙事诗谣如何把日常港口画面升格为带有宗教感的温柔凝视。", "verification": {"status": "verified", "method": "原词核验通过", "sourceName": "Wikipedia / CSUN 诗歌文本", "sourceUrl": "https://en.wikipedia.org/wiki/Suzanne_(Leonard_Cohen_song)"}, "audio": {"youtubeId": "vOw3YKTFimA", "previewUrl": ""}}, {"id": "2026-11-23-10", "index": "10", "title": "Mystery of Love", "artist": "Sufjan Stevens", "lyricist": "Sufjan Stevens", "language": "外文", "category": "外文经典", "genreVertical": "独立民谣诗篇", "emotion": "轻盈怅惘", "technique": "通感移觉", "lines": ["Oh, to see without my eyes", "The first time that you kissed me", "Boundless by the time I cried", "I built your walls around me", "White noise, what an awful sound", "Fumbling by Rogue River", "How much sorrow can I take", "Blackbird on my shoulder"], "translations": ["啊，仿佛不用双眼也能看见", "你第一次吻我的那个瞬间", "当我落泪时世界已无边界", "我将你的城墙筑在自己周身", "白噪音，多么刺耳的声响", "在罗格河畔手足无措地摸索", "我究竟还能承受多少悲伤", "肩头停落着一只黑鸟"], "reason": "“不用双眼也能看见”“白噪音”与“肩头黑鸟”把初恋的眩晕感拆成视觉、听觉与重量的通感切片，极其克制。", "verification": {"status": "verified", "method": "原词核验通过", "sourceName": "KKBOX 词库", "sourceUrl": "https://www.kkbox.com/jp/ja/song/Glo7qmX5ylVNEd7AKo"}, "audio": {"youtubeId": "hElWfubxaSI", "previewUrl": ""}}], "quotes": [{"id": "2026-11-23-q01", "index": "01", "category": "文学摘录", "emotion": "克制苍凉", "technique": "白描反差", "text": "我在年青时候也曾经做过许多梦，后来大半忘却了，但自己也并不以为可惜。所谓回忆者，虽说可以使人欢欣，有时也不免使人寂寞，使精神的丝缕还牵着已逝的寂寞的时光，又有什么意味呢。", "source": "鲁迅 · 《呐喊·自序》"}, {"id": "2026-11-23-q02", "index": "02", "category": "文学摘录", "emotion": "荒诞自嘲", "technique": "口语反转", "text": "那一天我二十一岁，在我一生的黄金时代，我有好多奢望。我想爱，想吃，还想在一瞬间变成天上半明半暗的云。后来我才知道，生活就是个缓慢受锤的过程。", "source": "王小波 · 《黄金时代》"}, {"id": "2026-11-23-q03", "index": "03", "category": "文学摘录", "emotion": "静谧通透", "technique": "留白张力", "text": "世界是自己的，与他人毫无关系。", "source": "杨绛 · 《一百岁感言》"}, {"id": "2026-11-23-q04", "index": "04", "category": "文学摘录", "emotion": "清冷疏离", "technique": "具象隐喻", "text": "每个人都有属于自己的一片森林，也许我们从来不曾去过，但它一直在那里，总会在那里。迷失的人迷失了，相逢的人会再相逢。", "source": "村上春树 · 《挪威的森林》"}, {"id": "2026-11-23-q05", "index": "05", "category": "文学摘录", "emotion": "温柔执拗", "technique": "时间折叠", "text": "我来不及认真地年轻，待明白过来时，只能选择认真地老去。", "source": "三毛 · 《随想》"}, {"id": "2026-11-23-q06", "index": "06", "category": "随笔散文", "emotion": "克制释怀", "technique": "一物三喻", "text": "人这一生，总要有一些无用的东西，比如晚霞、海风、一首没唱完的歌，它们不能帮你抵御寒冬，却能让你记得春天长什么样。", "source": "汪曾祺 · 《人间草木》读札"}, {"id": "2026-11-23-q07", "index": "07", "category": "文学摘录", "emotion": "冷冽清醒", "technique": "悖论修辞", "text": "真正让人感到孤独的，并不是身边空无一人，而是你心里装着许多紧要的事，却找不到一个可以不加解释就能听懂的人。", "source": "卡尔·荣格 · 《回忆、梦、思考》"}, {"id": "2026-11-23-q08", "index": "08", "category": "文学摘录", "emotion": "沧桑厚重", "technique": "拟物化虚为实", "text": "过去都是假的，回忆是一条没有归途的路，以往的一切春天都无法复原，即使最狂热最坚贞的爱情，归根结底也不过是一种瞬息即逝的现实。", "source": "加西亚·马尔克斯 · 《百年孤独》"}, {"id": "2026-11-23-q09", "index": "09", "category": "文学摘录", "emotion": "微苦幽默", "technique": "口语白描", "text": "我们一路奋战，不是为了改变世界，而是为了不让世界改变我们。", "source": "孔枝泳 · 《熔炉》"}, {"id": "2026-11-23-q10", "index": "10", "category": "随笔散文", "emotion": "静谧自省", "technique": "通感移觉", "text": "冬夜的安静是有重量的，像一层看不见的积雪落在窗台，连水壶烧开前细微的嘶鸣都显得格外庄重。", "source": "苇岸 · 《大地上的事情》"}, {"id": "2026-11-23-q11", "index": "11", "category": "文学摘录", "emotion": "坦然洒脱", "technique": "二元对立", "text": "凡是过去，皆为序章；可真正难写的，从来不是序章，而是人到中年依然愿意把空白页翻下去的勇气。", "source": "莎士比亚 · 《暴风雨》引申注"}, {"id": "2026-11-23-q12", "index": "12", "category": "文学摘录", "emotion": "清冷顿悟", "technique": "电影蒙太奇", "text": "列车穿过隧道的那几秒，车窗一下子变成了镜子，原本看风景的人，突然被迫看清了自己疲惫的脸。", "source": "川端康成 · 《雪国》意象札记"}, {"id": "2026-11-23-q13", "index": "13", "category": "纪实访谈", "emotion": "克制幽默", "technique": "口语反转", "text": "写歌不是把最痛的伤口撕给别人看，而是等它结痂以后，轻轻敲一敲，听听里面发出什么声音。", "source": "李宗盛 · 音乐创作访谈"}, {"id": "2026-11-23-q14", "index": "14", "category": "文学摘录", "emotion": "温柔坚韧", "technique": "具象隐喻", "text": "在隆冬，我终于知道，我身上有一个不可战胜的夏天。", "source": "阿尔贝·加缪 · 《重返蒂帕萨》"}, {"id": "2026-11-23-q15", "index": "15", "category": "影视网文", "emotion": "荒诞清醒", "technique": "口语反转", "text": "成年人的崩溃从来不是摔门而出，而是把垃圾袋系好结，顺手带下楼，在电梯里对着反光的不锈钢门把表情重新摆正。", "source": "《一年一度喜剧大赛》创作手记"}, {"id": "2026-11-23-q16", "index": "16", "category": "文学摘录", "emotion": "幽暗深沉", "technique": "拟物化虚为实", "text": "有些话当时没说出口，后来就像掉进沙发缝里的硬币，你知道它一直在那里，却再也没有理由把整张沙发搬开。", "source": "张爱玲 · 散文意象选"}, {"id": "2026-11-23-q17", "index": "17", "category": "随笔散文", "emotion": "轻盈自由", "technique": "通感移觉", "text": "夏末傍晚的风总带着一点微苦的青草味，像是时间在提醒你：所有热烈的季节，都在你没留意时悄悄收尾。", "source": "史铁生 · 《我与地坛》读记"}, {"id": "2026-11-23-q18", "index": "18", "category": "文学摘录", "emotion": "克制深情", "technique": "留白张力", "text": "我并不怕等，我只怕等了很久以后，连自己当初在等什么都忘了，只剩下一个习惯性的抬头动作。", "source": "木心 · 《文学回忆录》"}, {"id": "2026-11-23-q19", "index": "19", "category": "纪实访谈", "emotion": "坦诚锐利", "technique": "白描反差", "text": "所谓灵感，往往不是从天而降的闪电，而是你把日常里那些没人多看一眼的碎屑捡起来，擦干净，摆在了同一张桌子上。", "source": "黄伟文 · 专栏随笔"}, {"id": "2026-11-23-q20", "index": "20", "category": "影视网文", "emotion": "温暖释怀", "technique": "时间折叠", "text": "后来我们不再追问结局，只是在某个堵车的黄昏，电台恰好放到那首旧歌，才发现那些以为过不去的坎，早就成了后视镜里缩小的路灯。", "source": "《漫长的季节》观众评注"}]}, {"date": "2026-11-22", "weekday": "星期日", "displayDate": "2026年11月22日 星期日", "issueLabel": "过往期次", "summary": "往期精选存档 · 支持 ?date=2026-11-22 直达与全库跨期搜索", "neigong": {"date": "2026-11-22", "title": "韵脚的疏密与词的呼吸", "coreTechnique": "声韵呼吸", "secondaryTechniques": ["电影蒙太奇", "口语白描"], "linkedSongIds": ["2026-11-22-01", "2026-11-22-02"], "excerpt": "押韵不是作文比赛，是换气、顿感与情绪的阀门。本文对照粤语与国语填词的声韵经验，拆解死押韵、疏韵、开口音与闭口音如何服务情绪，并给出立即可做的练习。", "sections": [{"heading": "一、押韵不是为了整齐，而是为了控制呼吸", "paragraphs": ["初学者最容易陷入的误区是“句句押到底”，结果整段主歌像数来宝一样失去说话感。优秀的词人懂得用疏密制造弹性：主歌用隔句押（ABCB）留出叙事呼吸，副歌再收紧韵脚让情绪集中爆发。", "看本期第 01 首告五人《披星戴月的想你》，前四句在散步与公车擦身之间保持松弛的口语节奏，直到“明亮的夜，漆黑的宇宙”才把情绪托高。"]}, {"heading": "二、开口音与闭口音的情绪分工", "paragraphs": ["高音副歌适合用开口度大的韵母（a / ao / ang / ai），方便歌手共鸣释放；而深夜低语、自省桥段则适合闭口或鼻音韵母（i / u / en / in），听感上自然向内收敛。", "本期第 02 首傻子与白痴《5:10a.m.》开篇连用“晃、荡、两、茫、样”等 ang 韵，把凌晨五点十分空旷街巷的回声感直接写进了发音里。"]}, {"heading": "三、10 分钟声韵自检法", "paragraphs": ["把你刚写完的 8 句歌词关掉伴奏，用正常跟朋友聊天的语速朗读一遍：凡是让你觉得“嘴里打结”或“为了押韵硬倒装”的词，直接划掉重写——自然说话的语气永远高于死押韵。"]}]}, "songs": [{"id": "2026-11-22-01", "index": "01", "title": "披星戴月的想你", "artist": "告五人", "lyricist": "潘燕山", "language": "中文", "category": "近五年新人新作", "genreVertical": "都市浪漫独立", "emotion": "克制思念", "technique": "电影蒙太奇", "neigongMatch": {"note": "当期内功示范：主歌疏韵营造漫步说话感，副歌借夜空意象收束情绪", "highlightLines": [0, 2, 4]}, "lines": ["突如其来的美梦 是你离去时卷起的泡沫", "踢着石头默默地走 公车从旁擦身而过", "突如其来的念头 幻想化成流星的你我", "明亮的夜 漆黑的宇宙", "通通都留给披星戴月的想念"], "reason": "用“踢着石头”“公车擦身”两个极低成本的街头动作，稳稳托住副歌宏大的夜空想象。", "verification": {"status": "verified", "method": "原词核验通过", "sourceName": "KKBOX 官方词库", "sourceUrl": "https://www.kkbox.com/sg/sc/song/-oeFMV8-e7WVJPTp3l"}, "audio": {"youtubeId": "czUF4VR2m-4", "previewUrl": ""}}, {"id": "2026-11-22-02", "index": "02", "title": "5:10a.m.", "artist": "傻子与白痴", "lyricist": "蔡维泽", "language": "中文", "category": "近五年新人新作", "genreVertical": "凌晨都市另类", "emotion": "冷冽迷茫", "technique": "声韵呼吸", "neigongMatch": {"note": "当期内功示范：连续开口 ang 韵（晃/荡/两/茫/样）放大凌晨街头的空旷回响", "highlightLines": [0, 1, 2]}, "lines": ["树影摇晃 酒鬼们成群游荡", "街灯夜巷 野狗三三两两", "星星月亮 夜色茫茫 跟生活一样", "年轻的人们该去哪", "过得幸福总会梦想 跌些伤 还没长大"], "reason": "极简的四字意象拼贴，开篇三句就用声韵和画面锁死了清晨五点十分特有的清冷空气。", "verification": {"status": "verified", "method": "原词核验通过", "sourceName": "KKBOX 官方词库", "sourceUrl": "https://www.kkbox.com/sg/sc/song/Gl7UmiHpylVNHOFzCJ"}, "audio": {"youtubeId": "-oDRzgmYHms", "previewUrl": ""}}], "quotes": [{"id": "2026-11-22-q01", "index": "01", "category": "文学摘录", "emotion": "清冷自省", "technique": "留白张力", "text": "世间许多事情，并非没有答案，而是答案来得太慢，慢到等你拿到时，早已不再是当年那个提问的人。", "source": "迟子建 · 散文选"}, {"id": "2026-11-22-q02", "index": "02", "category": "文学摘录", "emotion": "荒诞幽默", "technique": "口语反转", "text": "如果一个人只想着把日子过得滴水不漏，那他大概也会把所有意外的惊喜一并挡在门外。", "source": "毛姆 · 《月亮与六便士》读札"}, {"id": "2026-11-22-q03", "index": "03", "category": "随笔散文", "emotion": "温柔克制", "technique": "通感移觉", "text": "雨停后的柏油路总带着一种微凉的铁锈味，像是城市刚卸下一整天的防备。", "source": "舒国治 · 《理想的下午》"}, {"id": "2026-11-22-q04", "index": "04", "category": "纪实访谈", "emotion": "通透清醒", "technique": "白描反差", "text": "好句子从来不是词藻的胜利，而是观察角度比别人偏了十五度。", "source": "林夕 · 填词访谈录"}]}];
+
+      const STORAGE_KEY = 'linggan_ciku_state_v2';
+      const SYNC_KEY = 'linggan_ciku_sync_v2';
+
+      const appState = {
+        issuesByDate: {},
+        dates: [],
+        currentDate: '',
+        route: 'home', // 'home' | 'likes' | 'neigong' | 'neigong-detail'
+        neigongDate: '',
+        likesTab: 'songs', // 'songs' | 'quotes' | 'notes' | 'dislikes'
+        filterLang: '全部',
+        filterEmotion: '全部',
+        filterTechnique: '全部',
+        bilingualMode: {}, // songId -> 'stacked' | 'interleaved'
+        openDislikeMenuId: null,
+        activePlayer: null, // { songId, mode: 'full' | 'preview', loading: boolean, previewUrl: string, error: string }
+        previewCache: {},
+        pendingNote: null,
+        user: {
+          likedSongs: {}, // songId -> song snapshot + date
+          likedQuotes: {}, // quoteId -> quote snapshot + date
+          notes: [], // { id, line, songId, songTitle, artist, date, note, tag, createdAt }
+          dislikes: [] // { id, type: 'creator' | 'content', value, label, createdAt }
+        },
+        sync: {
+          workerUrl: '',
+          token: ''
+        }
+      };
+
+      function safeReadStorage(key, fallback) {
+        try {
+          const raw = window.localStorage.getItem(key);
+          return raw ? JSON.parse(raw) : fallback;
+        } catch {
+          return fallback;
+        }
+      }
+
+      function safeWriteStorage(key, val) {
+        try {
+          window.localStorage.setItem(key, JSON.stringify(val));
+        } catch {
+          // 忽略沙盒或隐私模式存储限制
+        }
+      }
+
+      function escapeHtml(str) {
+        return String(str == null ? '' : str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      let toastTimer = null;
+      function showToast(msg, undoCb) {
+        const el = document.getElementById('toastBar');
+        el.innerHTML = `<span>${escapeHtml(msg)}</span>` + (undoCb ? `<button type="button" id="toastUndoBtn" style="background:none;border:none;color:var(--accent-gold);cursor:pointer;text-decoration:underline;font-size:13px;padding:0;">撤销</button>` : '');
+        el.classList.add('show');
+        if (undoCb) {
+          const btn = document.getElementById('toastUndoBtn');
+          if (btn) btn.addEventListener('click', () => { undoCb(); el.classList.remove('show'); });
+        }
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+      }
+
+      function copyText(text, successMsg) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(
+            () => showToast(successMsg || '已复制到剪贴板'),
+            () => fallbackCopy(text, successMsg)
+          );
+        } else {
+          fallbackCopy(text, successMsg);
+        }
+      }
+
+      function fallbackCopy(text, successMsg) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          showToast(successMsg || '已复制到剪贴板');
+        } catch {
+          showToast('复制失败，请手动选中复制');
+        }
+        document.body.removeChild(ta);
+      }
+
+      function computePreferenceSummary() {
+        const emotions = new Set();
+        const techniques = new Set();
+        Object.values(appState.user.likedSongs).forEach((s) => {
+          if (s.emotion) emotions.add(s.emotion);
+          if (s.technique) techniques.add(s.technique);
+        });
+        Object.values(appState.user.likedQuotes).forEach((q) => {
+          if (q.emotion) emotions.add(q.emotion);
+          if (q.technique) techniques.add(q.technique);
+        });
+        return {
+          likedEmotions: Array.from(emotions),
+          likedTechniques: Array.from(techniques)
+        };
+      }
+
+      function persistUserState(pushCloud) {
+        safeWriteStorage(STORAGE_KEY, appState.user);
+        if (pushCloud && appState.sync.workerUrl && appState.sync.workerUrl.startsWith('https://')) {
+          syncToCloud(false);
+        }
+      }
+
+      async function syncToCloud(notify) {
+        const url = appState.sync.workerUrl;
+        if (!url || !url.startsWith('https://')) return;
+        try {
+          const headers = { 'Content-Type': 'application/json' };
+          if (appState.sync.token) headers.Authorization = `Bearer ${appState.sync.token}`;
+          const pref = computePreferenceSummary();
+          const payload = {
+            ...appState.user,
+            ...pref
+          };
+          const res = await fetch(url, { method: 'PUT', headers, body: JSON.stringify(payload) });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          if (notify) showToast('已同步到 Cloudflare Worker 云端');
+        } catch (err) {
+          if (notify) showToast(`云端同步失败：${err.message}`);
+        }
+      }
+
+      async function pullFromCloud() {
+        const url = appState.sync.workerUrl;
+        if (!url || !url.startsWith('https://')) {
+          showToast('请先填写 https:// 开头的 Worker 地址');
+          return;
+        }
+        try {
+          const headers = {};
+          if (appState.sync.token) headers.Authorization = `Bearer ${appState.sync.token}`;
+          const res = await fetch(url, { headers });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          appState.user = {
+            likedSongs: data.likedSongs || {},
+            likedQuotes: data.likedQuotes || {},
+            notes: Array.isArray(data.notes) ? data.notes : [],
+            dislikes: Array.isArray(data.dislikes) ? data.dislikes : []
+          };
+          safeWriteStorage(STORAGE_KEY, appState.user);
+          renderAll();
+          showToast('已从云端恢复点赞与灵感本');
+        } catch (err) {
+          showToast(`云端拉取失败：${err.message}`);
+        }
+      }
+
+      function isSongBlocked(song) {
+        return appState.user.dislikes.some((d) => {
+          if (d.type === 'creator') return d.value === song.artist || d.value === song.lyricist;
+          if (d.type === 'content') return d.value === song.technique || d.value === song.emotion;
+          return false;
+        });
+      }
+
+      function isQuoteBlocked(quote) {
+        const author = (quote.source || '').split('·')[0].trim();
+        return appState.user.dislikes.some((d) => {
+          if (d.type === 'creator') return d.value === author;
+          if (d.type === 'content') return d.value === quote.technique || d.value === quote.emotion;
+          return false;
+        });
+      }
+
+      function addDislike(type, value, label) {
+        const exists = appState.user.dislikes.some((d) => d.type === type && d.value === value);
+        if (!exists) {
+          const entry = {
+            id: `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+            type,
+            value,
+            label,
+            createdAt: new Date().toISOString()
+          };
+          appState.user.dislikes.unshift(entry);
+          persistUserState(true);
+          appState.openDislikeMenuId = null;
+          renderAll();
+          showToast(`已屏蔽：${label}`, () => {
+            appState.user.dislikes = appState.user.dislikes.filter((d) => d.id !== entry.id);
+            persistUserState(true);
+            renderAll();
+          });
+        }
+      }
+
+      function toggleLikeSong(song, date) {
+        if (appState.user.likedSongs[song.id]) {
+          delete appState.user.likedSongs[song.id];
+          showToast(`已取消点赞《${song.title}》`);
+        } else {
+          appState.user.likedSongs[song.id] = { ...song, issueDate: date };
+          showToast(`已点赞《${song.title}》，已收入我的点赞`);
+        }
+        persistUserState(true);
+        renderAll();
+      }
+
+      function toggleLikeQuote(quote, date) {
+        if (appState.user.likedQuotes[quote.id]) {
+          delete appState.user.likedQuotes[quote.id];
+          showToast('已取消点赞该金句');
+        } else {
+          appState.user.likedQuotes[quote.id] = { ...quote, issueDate: date };
+          showToast('已点赞金句，已收入我的点赞');
+        }
+        persistUserState(true);
+        renderAll();
+      }
+
+      function openNoteModal(line, song, date) {
+        appState.pendingNote = { line, songId: song.id, songTitle: song.title, artist: song.artist, date };
+        document.getElementById('noteQuotePreview').textContent = line;
+        document.getElementById('noteQuoteSource').textContent = `出自 ${song.artist}《${song.title}》（${date} 期）`;
+        document.getElementById('noteTextInput').value = '';
+        document.getElementById('noteTagInput').value = song.technique || '';
+        document.getElementById('noteModal').classList.add('open');
+        setTimeout(() => document.getElementById('noteTextInput').focus(), 40);
+      }
+
+      function exportLikesMarkdown() {
+        const songs = Object.values(appState.user.likedSongs);
+        const quotes = Object.values(appState.user.likedQuotes);
+        const notes = appState.user.notes;
+        const lines = ['# 灵感词库 · 个人收藏与单句灵感本', ''];
+        lines.push(`导出时间：${new Date().toLocaleString('zh-CN')}`, '');
+
+        lines.push(`## 一、单句灵感本（${notes.length} 条）`, '');
+        if (notes.length === 0) lines.push('_暂无单句灵感记录_', '');
+        notes.forEach((n, idx) => {
+          lines.push(`${idx + 1}. > ${n.line}`);
+          lines.push(`   - 出处：${n.artist}《${n.songTitle}》（${n.date}）`);
+          if (n.tag) lines.push(`   - 标签：\`${n.tag}\``);
+          if (n.note) lines.push(`   - 批注：${n.note}`);
+          lines.push('');
+        });
+
+        lines.push(`## 二、点赞歌词（${songs.length} 首）`, '');
+        songs.forEach((s) => {
+          lines.push(`### 《${s.title}》— ${s.artist}（${s.emotion} · ${s.technique}）`, '');
+          (s.lines || []).forEach((l) => lines.push(`> ${l}`));
+          if (s.verification?.sourceUrl) lines.push('', `来源：[${s.verification.sourceName || '资料来源'}](${s.verification.sourceUrl})`);
+          lines.push('');
+        });
+
+        lines.push(`## 三、点赞金句（${quotes.length} 条）`, '');
+        quotes.forEach((q) => {
+          lines.push(`- ${q.text} —— ${q.source}（${q.emotion} · ${q.technique}）`);
+        });
+
+        const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `linggan-ciku-export-${new Date().toISOString().slice(0, 10)}.md`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+        showToast('已导出 Markdown 灵感集');
+      }
+
+      function syncUrlDate(date) {
+        try {
+          const url = new URL(window.location.href);
+          if (date && date !== appState.dates[0]) {
+            url.searchParams.set('date', date);
+          } else {
+            url.searchParams.delete('date');
+          }
+          window.history.replaceState({}, '', url.toString());
+        } catch {
+          // 沙盒 iframe 中忽略 history.replaceState 限制
+        }
+      }
+
+      
+      async function startSongPlayback(song, mode) {
+        // Clicking the same active mode toggles it off
+        if (appState.activePlayer && appState.activePlayer.songId === song.id && appState.activePlayer.mode === mode) {
+          appState.activePlayer = null;
+          renderAll();
+          return;
+        }
+
+        if (mode === 'full') {
+          const ytId = song.audio && song.audio.youtubeId;
+          if (ytId) {
+            appState.activePlayer = { songId: song.id, mode: 'full', loading: false, previewUrl: '', error: '' };
+            renderAll();
+            return;
+          }
+          // Fallback to 30s preview if no YouTube ID
+          mode = 'preview';
+        }
+
+        const cached = (song.audio && song.audio.previewUrl) || appState.previewCache[song.id];
+        if (cached) {
+          appState.activePlayer = { songId: song.id, mode: 'preview', loading: false, previewUrl: cached, error: '' };
+          renderAll();
+          return;
+        }
+
+        appState.activePlayer = { songId: song.id, mode: 'preview', loading: true, previewUrl: '', error: '' };
+        renderAll();
+
+        try {
+          const q = encodeURIComponent(`${song.title} ${song.artist}`);
+          const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=3`);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          const hit = (data.results || []).find((r) => r.previewUrl);
+          if (!hit) {
+            appState.activePlayer = {
+              songId: song.id,
+              mode: 'preview',
+              loading: false,
+              previewUrl: '',
+              error: '未检索到官方 30 秒音频片段，可切换“播放全曲”或外部音源收听。'
+            };
+          } else {
+            appState.previewCache[song.id] = hit.previewUrl;
+            appState.activePlayer = {
+              songId: song.id,
+              mode: 'preview',
+              loading: false,
+              previewUrl: hit.previewUrl,
+              error: ''
+            };
+          }
+        } catch {
+          appState.activePlayer = {
+            songId: song.id,
+            mode: 'preview',
+            loading: false,
+            previewUrl: '',
+            error: '当前网络无法连接 iTunes 试听接口，请点击“播放全曲”或稍后重试。'
+          };
+        }
+        renderAll();
+      }
+
+      function renderInlinePlayer(song) {
+        const p = appState.activePlayer;
+        if (!p || p.songId !== song.id) return '';
+        const ytId = song.audio && song.audio.youtubeId;
+        if (p.mode === 'full' && ytId) {
+          const ytWatch = `https://www.youtube.com/watch?v=${encodeURIComponent(ytId)}`;
+          return `
+            <div class="player-panel">
+              <div class="player-head">
+                <span>♫ 正在播放全曲 · 《${escapeHtml(song.title)}》— ${escapeHtml(song.artist)}</span>
+                <div style="display:flex; gap:8px; align-items:center;">
+                  <button type="button" class="icon-btn" data-play-preview="${escapeHtml(song.id)}">切到 30 秒片段</button>
+                  <a class="icon-btn" href="${ytWatch}" target="_blank" rel="noopener noreferrer">YouTube 打开 ↗</a>
+                  <button type="button" class="icon-btn" data-close-player>收起</button>
+                </div>
+              </div>
+              <div class="yt-frame-wrap">
+                <iframe
+                  src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(ytId)}?autoplay=1&rel=0"
+                  title="${escapeHtml(song.title)} - ${escapeHtml(song.artist)}"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen>
+                </iframe>
+              </div>
+            </div>
+          `;
+        }
+
+        let bodyHtml = '';
+        if (p.loading) {
+          bodyHtml = `<div style="font-size:13px; color:var(--text-secondary); padding:6px 0;">正在拉取官方 30 秒试听片段…</div>`;
+        } else if (p.error) {
+          bodyHtml = `<div style="font-size:13px; color:var(--danger); padding:4px 0;">${escapeHtml(p.error)}</div>`;
+        } else if (p.previewUrl) {
+          bodyHtml = `<audio class="audio-native" controls autoplay src="${escapeHtml(p.previewUrl)}"></audio>`;
+        }
+
+        return `
+          <div class="player-panel">
+            <div class="player-head">
+              <span>♪ 30 秒官方片段试听 · 《${escapeHtml(song.title)}》— ${escapeHtml(song.artist)}</span>
+              <div style="display:flex; gap:8px; align-items:center;">
+                ${ytId ? `<button type="button" class="icon-btn" data-play-full="${escapeHtml(song.id)}">切到全曲播放</button>` : ''}
+                <button type="button" class="icon-btn" data-close-player>收起</button>
+              </div>
+            </div>
+            ${bodyHtml}
+          </div>
+        `;
+      }
+
+      function renderTopNav() {
+        const nav = document.getElementById('topNav');
+        const totalSaved =
+          Object.keys(appState.user.likedSongs).length +
+          Object.keys(appState.user.likedQuotes).length +
+          appState.user.notes.length;
+        const badge = totalSaved > 0 ? `<span class="nav-count">${totalSaved}</span>` : '';
+
+        if (appState.route === 'home') {
+          nav.innerHTML = `
+            <button class="nav-btn active" type="button" data-nav="songs">歌词</button>
+            <button class="nav-btn" type="button" data-nav="quotes">金句</button>
+            <button class="nav-btn" type="button" data-nav="likes">我的点赞${badge}</button>
+            <button class="nav-btn" type="button" data-nav="neigong">内功</button>
+            <button class="search-trigger" type="button" id="openSearchBtn">⌕ 搜索 <span class="kbd">/</span></button>
+          `;
+        } else {
+          nav.innerHTML = `
+            <button class="nav-btn" type="button" data-nav="home">今日词库</button>
+            <button class="nav-btn ${appState.route === 'likes' ? 'active' : ''}" type="button" data-nav="likes">我的点赞${badge}</button>
+            <button class="nav-btn ${appState.route.startsWith('neigong') ? 'active' : ''}" type="button" data-nav="neigong">内功</button>
+            <button class="search-trigger" type="button" id="openSearchBtn">⌕ 搜索 <span class="kbd">/</span></button>
+          `;
+        }
+
+        nav.querySelectorAll('[data-nav]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const target = btn.getAttribute('data-nav');
+            if (target === 'songs') {
+              appState.route = 'home';
+              renderAll();
+              const el = document.getElementById('songs');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            } else if (target === 'quotes') {
+              appState.route = 'home';
+              renderAll();
+              const el = document.getElementById('quotes');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            } else if (target === 'home') {
+              appState.route = 'home';
+              renderAll();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (target === 'likes') {
+              appState.route = 'likes';
+              renderAll();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (target === 'neigong') {
+              appState.route = 'neigong';
+              renderAll();
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          });
+        });
+
+        const openSearchBtn = document.getElementById('openSearchBtn');
+        if (openSearchBtn) openSearchBtn.addEventListener('click', openSearchModal);
+      }
+
+      function renderHome() {
+        const root = document.getElementById('appRoot');
+        const rail = document.getElementById('indexRail');
+        const issue = appState.issuesByDate[appState.currentDate];
+        if (!issue) {
+          root.innerHTML = `<div class="empty-state">暂无该期次数据。</div>`;
+          rail.innerHTML = '';
+          return;
+        }
+
+        const idx = appState.dates.indexOf(appState.currentDate);
+        const isLatest = idx === 0;
+        const hasPrev = idx < appState.dates.length - 1;
+        const hasNext = idx > 0;
+
+        // Collect filter options from current issue
+        const emotionSet = new Set();
+        const techSet = new Set();
+        (issue.songs || []).forEach((s) => {
+          if (s.emotion) emotionSet.add(s.emotion);
+          if (s.technique) techSet.add(s.technique);
+        });
+        (issue.quotes || []).forEach((q) => {
+          if (q.emotion) emotionSet.add(q.emotion);
+          if (q.technique) techSet.add(q.technique);
+        });
+
+        const visibleSongs = (issue.songs || []).filter((s) => {
+          if (isSongBlocked(s)) return false;
+          if (appState.filterLang !== '全部' && s.language !== appState.filterLang) return false;
+          if (appState.filterEmotion !== '全部' && s.emotion !== appState.filterEmotion) return false;
+          if (appState.filterTechnique !== '全部' && s.technique !== appState.filterTechnique) return false;
+          return true;
+        });
+
+        const visibleQuotes = (issue.quotes || []).filter((q) => {
+          if (isQuoteBlocked(q)) return false;
+          if (appState.filterEmotion !== '全部' && q.emotion !== appState.filterEmotion) return false;
+          if (appState.filterTechnique !== '全部' && q.technique !== appState.filterTechnique) return false;
+          return true;
+        });
+
+        const hasActiveFilter =
+          appState.filterLang !== '全部' ||
+          appState.filterEmotion !== '全部' ||
+          appState.filterTechnique !== '全部';
+
+        const songsHtml = visibleSongs.length === 0
+          ? `<div class="empty-state" style="margin-top:12px;">当前筛选条件下暂无匹配歌词，试试重置筛选或查看其他期次。</div>`
+          : visibleSongs.map((song) => {
+              const liked = Boolean(appState.user.likedSongs[song.id]);
+              const isForeign = song.language === '外文' && Array.isArray(song.translations) && song.translations.length > 0;
+              const mode = appState.bilingualMode[song.id] || 'stacked';
+              const hlSet = new Set((song.neigongMatch && song.neigongMatch.highlightLines) || []);
+
+              let lyricHtml = '';
+              if (isForeign && mode === 'interleaved') {
+                lyricHtml = `<div class="lyric-block">` + song.lines.map((line, i) => `
+                  <div class="bilingual-pair" data-note-song="${escapeHtml(song.id)}" data-note-line="${escapeHtml(line)}">
+                    <div class="bilingual-orig">${escapeHtml(line)}</div>
+                    <div class="bilingual-zh">${escapeHtml(song.translations[i] || '')}</div>
+                  </div>
+                `).join('') + `</div>`;
+              } else {
+                lyricHtml = `<div class="lyric-block">` + song.lines.map((line, i) => `
+                  <span class="lyric-line ${hlSet.has(i) ? 'hl' : ''}" data-note-song="${escapeHtml(song.id)}" data-note-line="${escapeHtml(line)}" title="点击收藏单句到灵感本">
+                    ${escapeHtml(line)}<span class="line-hint">+ 记灵感</span>
+                  </span>
+                `).join('') + `</div>`;
+
+                if (isForeign) {
+                  lyricHtml += `
+                    <div class="translation-card">
+                      <div class="translation-label">中文翻译</div>
+                      <div class="translation-lines">${song.translations.map((t) => `<div>${escapeHtml(t)}</div>`).join('')}</div>
+                    </div>
+                  `;
+                }
+              }
+
+              const bilingualToggleHtml = isForeign ? `
+                <div class="bilingual-bar">
+                  <span style="font-size:12px; color:var(--text-muted);">外文双语阅读模式</span>
+                  <div class="mode-switch">
+                    <button type="button" class="mode-btn ${mode === 'stacked' ? 'active' : ''}" data-bilingual="${escapeHtml(song.id)}" data-mode="stacked">分段对照</button>
+                    <button type="button" class="mode-btn ${mode === 'interleaved' ? 'active' : ''}" data-bilingual="${escapeHtml(song.id)}" data-mode="interleaved">逐行双语</button>
+                  </div>
+                </div>
+              ` : '';
+
+              const neigongHtml = song.neigongMatch ? `
+                <div class="neigong-banner">
+                  <span>✦ ${escapeHtml(song.neigongMatch.note)}</span>
+                  <button type="button" class="neigong-jump" data-open-neigong="${escapeHtml(issue.date)}">对照阅读本期内功 →</button>
+                </div>
+              ` : '';
+
+              const dislikeMenuHtml = appState.openDislikeMenuId === song.id ? `
+                <div class="dislike-menu">
+                  <button type="button" class="dislike-option" data-dislike-type="creator" data-dislike-val="${escapeHtml(song.artist)}" data-dislike-label="歌手 ${escapeHtml(song.artist)}">
+                    1. 不喜欢此人
+                    <small>屏蔽 ${escapeHtml(song.artist)}，后续生成避开</small>
+                  </button>
+                  <button type="button" class="dislike-option" data-dislike-type="content" data-dislike-val="${escapeHtml(song.technique)}" data-dislike-label="技法「${escapeHtml(song.technique)}」">
+                    2. 不喜欢此类内容
+                    <small>屏蔽「${escapeHtml(song.technique)}」类写法</small>
+                  </button>
+                </div>
+              ` : '';
+
+              return `
+                <article class="song-card" id="song-${escapeHtml(song.id)}">
+                  <div class="song-aside">
+                    <div class="song-num">${escapeHtml(song.index)}</div>
+                    <div class="genre-vertical">${escapeHtml(song.genreVertical || '精选词作')}</div>
+                    <span class="pill">${escapeHtml(song.language)}</span>
+                  </div>
+                  <div>
+                    <div class="song-head">
+                      <div class="song-title-line">
+                        <h3 class="song-title">${escapeHtml(song.title)}</h3>
+                        <span class="song-artist">${escapeHtml(song.artist)}</span>
+                        ${song.lyricist ? `<span class="song-lyricist">词 / ${escapeHtml(song.lyricist)}</span>` : ''}
+                      </div>
+                      <div class="song-tags">
+                        <span class="pill">${escapeHtml(song.emotion)}</span>
+                        <span class="pill pill-gold">${escapeHtml(song.technique)}</span>
+                        <span class="pill pill-ok" title="${escapeHtml(song.verification?.method || '原词已核验')}">✓ 已核验</span>
+                      </div>
+                    </div>
+                    ${neigongHtml}
+                    ${renderInlinePlayer(song)}
+                    ${bilingualToggleHtml}
+                    ${lyricHtml}
+                    <div class="reason-box">
+                      <div class="reason-label">收录依据 · ${escapeHtml(song.category || '')}</div>
+                      <p class="reason-text">${escapeHtml(song.reason)}</p>
+                    </div>
+                    <div class="action-row">
+                      ${song.audio?.youtubeId ? `<button type="button" class="act-btn ${appState.activePlayer?.songId === song.id && appState.activePlayer?.mode === 'full' ? 'playing' : ''}" data-play-full="${escapeHtml(song.id)}">${appState.activePlayer?.songId === song.id && appState.activePlayer?.mode === 'full' ? '■ 停止全曲' : '▶ 播放全曲'}</button>` : ''}
+                      <button type="button" class="act-btn ${appState.activePlayer?.songId === song.id && appState.activePlayer?.mode === 'preview' ? 'playing' : ''}" data-play-preview="${escapeHtml(song.id)}">${appState.activePlayer?.songId === song.id && appState.activePlayer?.mode === 'preview' ? '■ 停止片段' : '♪ 30秒试听'}</button>
+                      ${song.verification?.sourceUrl ? `<a class="act-btn" href="${escapeHtml(song.verification.sourceUrl)}" target="_blank" rel="noopener noreferrer">资料来源 ↗</a>` : ''}
+                      <button type="button" class="act-btn" data-copy-song="${escapeHtml(song.id)}">复制摘录</button>
+                      <button type="button" class="act-btn ${liked ? 'liked' : ''}" data-like-song="${escapeHtml(song.id)}">${liked ? '♥ 已点赞' : '♡ 点赞'}</button>
+                      <div class="dislike-wrap">
+                        <button type="button" class="act-btn" data-toggle-dislike="${escapeHtml(song.id)}">👎 差评</button>
+                        ${dislikeMenuHtml}
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              `;
+            }).join('');
+
+        const quotesHtml = visibleQuotes.length === 0
+          ? `<div class="empty-state">当前筛选条件下暂无匹配金句。</div>`
+          : `<div class="quotes-grid">` + visibleQuotes.map((q) => {
+              const liked = Boolean(appState.user.likedQuotes[q.id]);
+              const author = (q.source || '').split('·')[0].trim() || '该作者';
+              const dislikeMenuHtml = appState.openDislikeMenuId === q.id ? `
+                <div class="dislike-menu" style="right:0; left:auto;">
+                  <button type="button" class="dislike-option" data-dislike-type="creator" data-dislike-val="${escapeHtml(author)}" data-dislike-label="作者 ${escapeHtml(author)}">
+                    1. 不喜欢此人
+                    <small>屏蔽 ${escapeHtml(author)}</small>
+                  </button>
+                  <button type="button" class="dislike-option" data-dislike-type="content" data-dislike-val="${escapeHtml(q.technique)}" data-dislike-label="技法「${escapeHtml(q.technique)}」">
+                    2. 不喜欢此类内容
+                    <small>屏蔽「${escapeHtml(q.technique)}」类金句</small>
+                  </button>
+                </div>
+              ` : '';
+
+              return `
+                <article class="quote-card" id="quote-${escapeHtml(q.id)}">
+                  <div>
+                    <div class="quote-top">
+                      <span class="quote-num">${escapeHtml(q.index)}</span>
+                      <span class="pill">${escapeHtml(q.category)}</span>
+                    </div>
+                    <p class="quote-text" style="margin-top:12px;">${escapeHtml(q.text)}</p>
+                  </div>
+                  <div>
+                    <div class="quote-tags" style="margin-bottom:10px;">
+                      <span class="mini-tag">${escapeHtml(q.emotion)}</span>
+                      <span class="mini-tag" style="color:var(--accent-gold); border-color:var(--accent-gold-border);">${escapeHtml(q.technique)}</span>
+                    </div>
+                    <div class="quote-foot">
+                      <span class="quote-source">${escapeHtml(q.source)}</span>
+                      <div class="quote-actions">
+                        <button type="button" class="icon-btn" data-copy-quote="${escapeHtml(q.id)}">复制</button>
+                        <button type="button" class="icon-btn ${liked ? 'liked' : ''}" data-like-quote="${escapeHtml(q.id)}">${liked ? '♥' : '♡'}</button>
+                        <div class="dislike-wrap">
+                          <button type="button" class="icon-btn" data-toggle-dislike="${escapeHtml(q.id)}">👎</button>
+                          ${dislikeMenuHtml}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              `;
+            }).join('') + `</div>`;
+
+        root.innerHTML = `
+          <section class="issue-bar">
+            <div>
+              <div class="issue-meta-top">
+                <span class="pill ${isLatest ? 'pill-gold' : ''}">${isLatest ? '最新一期' : '过往期次'}</span>
+                ${issue.neigong ? `<button type="button" class="pill pill-gold" style="cursor:pointer;" data-open-neigong="${escapeHtml(issue.date)}">今日内功 · ${escapeHtml(issue.neigong.coreTechnique)} →</button>` : ''}
+              </div>
+              <h1 class="issue-date">${escapeHtml(issue.displayDate)}</h1>
+              <p class="issue-sub">每日早 8 点更新 · 过往期次可回看 · ${escapeHtml(issue.summary || '')}</p>
+            </div>
+            <div class="issue-controls">
+              <button type="button" class="btn-outline" id="prevIssueBtn" ${hasPrev ? '' : 'disabled'}>← 前一期</button>
+              <select class="date-select" id="issueSelect" aria-label="选择期次日期">
+                ${appState.dates.map((d) => `<option value="${escapeHtml(d)}" ${d === appState.currentDate ? 'selected' : ''}>${escapeHtml(appState.issuesByDate[d].displayDate)}</option>`).join('')}
+              </select>
+              <button type="button" class="btn-outline" id="nextIssueBtn" ${hasNext ? '' : 'disabled'}>后一期 →</button>
+              ${!isLatest ? `<button type="button" class="btn-outline btn-gold" id="backLatestBtn">回到最新</button>` : ''}
+              <button type="button" class="btn-outline" id="openSyncBtn">导入 / 同步</button>
+            </div>
+          </section>
+
+          <section class="filter-bar" aria-label="双维度作词筛选">
+            <div class="filter-group">
+              <span style="font-size:12px; color:var(--text-muted);">筛选：</span>
+              ${['全部', '中文', '外文'].map((lang) => `<button type="button" class="filter-chip ${appState.filterLang === lang ? 'active' : ''}" data-filter-lang="${lang}">${lang}</button>`).join('')}
+              <select class="filter-select" id="emotionFilter" aria-label="按情绪底色筛选">
+                <option value="全部">全部情绪底色</option>
+                ${Array.from(emotionSet).map((e) => `<option value="${escapeHtml(e)}" ${appState.filterEmotion === e ? 'selected' : ''}>情绪 · ${escapeHtml(e)}</option>`).join('')}
+              </select>
+              <select class="filter-select" id="techFilter" aria-label="按修辞技法筛选">
+                <option value="全部">全部修辞技法</option>
+                ${Array.from(techSet).map((t) => `<option value="${escapeHtml(t)}" ${appState.filterTechnique === t ? 'selected' : ''}>技法 · ${escapeHtml(t)}</option>`).join('')}
+              </select>
+            </div>
+            <div class="filter-group">
+              <span style="font-size:12px; color:var(--text-muted);">显示 ${visibleSongs.length} 首歌 · ${visibleQuotes.length} 条金句</span>
+              ${hasActiveFilter ? `<button type="button" class="filter-chip active" id="resetFilterBtn">重置筛选</button>` : ''}
+            </div>
+          </section>
+
+          <section id="songs">
+            <div class="section-head">
+              <h2 class="section-title">十首歌词摘录</h2>
+              <span class="section-sub">7 首中文 · 3 首外文 · 附中译 · 点击任意一句可写入单句灵感本</span>
+            </div>
+            <div class="song-list">${songsHtml}</div>
+          </section>
+
+          <section id="quotes" class="quotes-section">
+            <div class="section-head">
+              <h2 class="section-title">金句粮草库</h2>
+              <span class="section-sub">${(issue.quotes || []).length} 条 · 文学为主，兼收随笔、访谈与影视 · 单条不超过 200 字</span>
+            </div>
+            ${quotesHtml}
+          </section>
+        `;
+
+        // Floating index rail
+        rail.innerHTML = visibleSongs.map((s) => `<button type="button" class="rail-btn" data-jump="song-${escapeHtml(s.id)}">${escapeHtml(s.index)}</button>`).join('') +
+          `<button type="button" class="rail-btn" data-jump="quotes" style="border-top:1px solid var(--hairline); margin-top:4px; padding-top:6px;">金句</button>`;
+
+        rail.querySelectorAll('[data-jump]').forEach((b) => {
+          b.addEventListener('click', () => {
+            const target = document.getElementById(b.getAttribute('data-jump'));
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        });
+
+        bindHomeEvents(issue);
+      }
+
+      function bindHomeEvents(issue) {
+        const prevBtn = document.getElementById('prevIssueBtn');
+        const nextBtn = document.getElementById('nextIssueBtn');
+        const sel = document.getElementById('issueSelect');
+        const backLatest = document.getElementById('backLatestBtn');
+        const openSync = document.getElementById('openSyncBtn');
+
+        if (prevBtn) prevBtn.addEventListener('click', () => {
+          const i = appState.dates.indexOf(appState.currentDate);
+          if (i < appState.dates.length - 1) switchIssue(appState.dates[i + 1]);
+        });
+        if (nextBtn) nextBtn.addEventListener('click', () => {
+          const i = appState.dates.indexOf(appState.currentDate);
+          if (i > 0) switchIssue(appState.dates[i - 1]);
+        });
+        if (sel) sel.addEventListener('change', (e) => switchIssue(e.target.value));
+        if (backLatest) backLatest.addEventListener('click', () => switchIssue(appState.dates[0]));
+        if (openSync) openSync.addEventListener('click', openSyncModal);
+
+        document.querySelectorAll('[data-filter-lang]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            appState.filterLang = btn.getAttribute('data-filter-lang');
+            renderHome();
+          });
+        });
+        const emoSel = document.getElementById('emotionFilter');
+        const techSel = document.getElementById('techFilter');
+        const resetBtn = document.getElementById('resetFilterBtn');
+        if (emoSel) emoSel.addEventListener('change', (e) => { appState.filterEmotion = e.target.value; renderHome(); });
+        if (techSel) techSel.addEventListener('change', (e) => { appState.filterTechnique = e.target.value; renderHome(); });
+        if (resetBtn) resetBtn.addEventListener('click', () => {
+          appState.filterLang = '全部';
+          appState.filterEmotion = '全部';
+          appState.filterTechnique = '全部';
+          renderHome();
+        });
+
+        document.querySelectorAll('[data-bilingual]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            appState.bilingualMode[btn.getAttribute('data-bilingual')] = btn.getAttribute('data-mode');
+            renderHome();
+          });
+        });
+
+        document.querySelectorAll('[data-open-neigong]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            appState.route = 'neigong-detail';
+            appState.neigongDate = btn.getAttribute('data-open-neigong');
+            renderAll();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        });
+
+        document.querySelectorAll('[data-note-song]').forEach((el) => {
+          el.addEventListener('click', () => {
+            const sid = el.getAttribute('data-note-song');
+            const line = el.getAttribute('data-note-line');
+            const song = (issue.songs || []).find((s) => s.id === sid);
+            if (song) openNoteModal(line, song, issue.date);
+          });
+        });
+
+        document.querySelectorAll('[data-play-full]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const song = (issue.songs || []).find((s) => s.id === btn.getAttribute('data-play-full'));
+            if (song) startSongPlayback(song, 'full');
+          });
+        });
+
+        document.querySelectorAll('[data-play-preview]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const song = (issue.songs || []).find((s) => s.id === btn.getAttribute('data-play-preview'));
+            if (song) startSongPlayback(song, 'preview');
+          });
+        });
+
+        document.querySelectorAll('[data-close-player]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            appState.activePlayer = null;
+            renderAll();
+          });
+        });
+
+        document.querySelectorAll('[data-copy-song]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const song = (issue.songs || []).find((s) => s.id === btn.getAttribute('data-copy-song'));
+            if (!song) return;
+            const body = song.lines.join('\n') + (song.translations?.length ? '\n\n【中文翻译】\n' + song.translations.join('\n') : '');
+            copyText(`《${song.title}》— ${song.artist}\n\n${body}`, `已复制《${song.title}》摘录`);
+          });
+        });
+
+        document.querySelectorAll('[data-like-song]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const song = (issue.songs || []).find((s) => s.id === btn.getAttribute('data-like-song'));
+            if (song) toggleLikeSong(song, issue.date);
+          });
+        });
+
+        document.querySelectorAll('[data-copy-quote]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const q = (issue.quotes || []).find((item) => item.id === btn.getAttribute('data-copy-quote'));
+            if (q) copyText(`${q.text}\n—— ${q.source}`, '已复制金句');
+          });
+        });
+
+        document.querySelectorAll('[data-like-quote]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const q = (issue.quotes || []).find((item) => item.id === btn.getAttribute('data-like-quote'));
+            if (q) toggleLikeQuote(q, issue.date);
+          });
+        });
+
+        document.querySelectorAll('[data-toggle-dislike]').forEach((btn) => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = btn.getAttribute('data-toggle-dislike');
+            appState.openDislikeMenuId = appState.openDislikeMenuId === id ? null : id;
+            renderHome();
+          });
+        });
+
+        document.querySelectorAll('[data-dislike-type]').forEach((btn) => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            addDislike(
+              btn.getAttribute('data-dislike-type'),
+              btn.getAttribute('data-dislike-val'),
+              btn.getAttribute('data-dislike-label')
+            );
+          });
+        });
+      }
+
+      function renderLikes() {
+        const root = document.getElementById('appRoot');
+        document.getElementById('indexRail').innerHTML = '';
+
+        const songs = Object.values(appState.user.likedSongs);
+        const quotes = Object.values(appState.user.likedQuotes);
+        const notes = appState.user.notes;
+        const dislikes = appState.user.dislikes;
+
+        let contentHtml = '';
+        if (appState.likesTab === 'songs') {
+          if (songs.length === 0) {
+            contentHtml = `<div class="empty-state">还没有点赞任何歌词。回到今日词库，看到喜欢的就点一颗心吧。<div style="margin-top:16px;"><button type="button" class="btn-outline btn-gold" data-back-home>回到今日词库</button></div></div>`;
+          } else {
+            contentHtml = songs.map((s) => `
+              <div class="neigong-card" style="cursor:default; margin-bottom:14px;">
+                <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+                  <div>
+                    <strong style="font-family:var(--font-serif); font-size:19px;">《${escapeHtml(s.title)}》</strong>
+                    <span style="color:var(--text-secondary); margin-left:8px;">${escapeHtml(s.artist)}</span>
+                    <span style="font-size:12px; color:var(--text-muted); margin-left:8px;">${escapeHtml(s.issueDate || '')}</span>
+                  </div>
+                  <div style="display:flex; gap:6px; align-items:center;">
+                    <span class="pill">${escapeHtml(s.emotion)}</span>
+                    <span class="pill pill-gold">${escapeHtml(s.technique)}</span>
+                    ${s.audio?.youtubeId ? `<button type="button" class="icon-btn" data-likes-play-full="${escapeHtml(s.id)}">▶ 播放全曲</button>` : ''}<button type="button" class="icon-btn" data-likes-play-preview="${escapeHtml(s.id)}">♪ 试听</button><button type="button" class="icon-btn" data-unlike-song="${escapeHtml(s.id)}">移除</button>
+                  </div>
+                </div>
+                <div style="font-family:var(--font-serif); font-size:15.5px; line-height:1.85; color:var(--text-secondary);">
+                  ${renderInlinePlayer(s)}${(s.lines || []).map((l) => `<div>${escapeHtml(l)}</div>`).join('')}
+                </div>
+              </div>
+            `).join('');
+          }
+        } else if (appState.likesTab === 'quotes') {
+          if (quotes.length === 0) {
+            contentHtml = `<div class="empty-state">还没有点赞任何金句。<div style="margin-top:16px;"><button type="button" class="btn-outline btn-gold" data-back-home>回到今日词库</button></div></div>`;
+          } else {
+            contentHtml = `<div class="quotes-grid">` + quotes.map((q) => `
+              <div class="quote-card">
+                <p class="quote-text">${escapeHtml(q.text)}</p>
+                <div class="quote-foot">
+                  <span class="quote-source">${escapeHtml(q.source)}</span>
+                  <button type="button" class="icon-btn" data-unlike-quote="${escapeHtml(q.id)}">移除</button>
+                </div>
+              </div>
+            `).join('') + `</div>`;
+          }
+        } else if (appState.likesTab === 'notes') {
+          if (notes.length === 0) {
+            contentHtml = `<div class="empty-state">单句灵感本还是空的。在今日词库中点击任意一行歌词，即可收藏单句并写下作词批注。<div style="margin-top:16px;"><button type="button" class="btn-outline btn-gold" data-back-home>去词库划句</button></div></div>`;
+          } else {
+            contentHtml = notes.map((n) => `
+              <div class="neigong-card" style="cursor:default; margin-bottom:14px;">
+                <div style="font-family:var(--font-serif); font-size:18px; border-left:2px solid var(--accent-gold); padding-left:12px; margin-bottom:10px;">
+                  ${escapeHtml(n.line)}
+                </div>
+                ${n.note ? `<p style="font-size:14px; color:var(--text-secondary); margin:0 0 10px;">批注：${escapeHtml(n.note)}</p>` : ''}
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; font-size:12.5px; color:var(--text-muted);">
+                  <div>
+                    <span>出自 ${escapeHtml(n.artist)}《${escapeHtml(n.songTitle)}》（${escapeHtml(n.date)}）</span>
+                    ${n.tag ? `<span class="pill pill-gold" style="margin-left:8px;">${escapeHtml(n.tag)}</span>` : ''}
+                  </div>
+                  <div style="display:flex; gap:8px;">
+                    <button type="button" class="icon-btn" data-copy-note="${escapeHtml(n.id)}">复制</button>
+                    <button type="button" class="icon-btn" data-del-note="${escapeHtml(n.id)}">删除</button>
+                  </div>
+                </div>
+              </div>
+            `).join('');
+          }
+        } else {
+          if (dislikes.length === 0) {
+            contentHtml = `<div class="empty-state">当前没有屏蔽任何歌手、作者或技法标签。</div>`;
+          } else {
+            contentHtml = dislikes.map((d) => `
+              <div class="neigong-card" style="cursor:default; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; gap:12px;">
+                <div>
+                  <span class="pill" style="margin-right:8px;">${d.type === 'creator' ? '屏蔽创作者' : '屏蔽内容技法'}</span>
+                  <strong>${escapeHtml(d.label)}</strong>
+                </div>
+                <button type="button" class="btn-outline" data-remove-dislike="${escapeHtml(d.id)}">撤销屏蔽</button>
+              </div>
+            `).join('');
+          }
+        }
+
+        root.innerHTML = `
+          <section class="subpage-head">
+            <div>
+              <h1 class="issue-date">我的点赞与灵感本</h1>
+              <p class="issue-sub">你赞过的歌词、金句与单句批注都会收在这里；配置 D1 云端同步后，次日早 8 点生成最多一半席位偏向你的口味。</p>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button type="button" class="btn-outline btn-gold" id="exportMdBtn">导出 Markdown</button>
+              <button type="button" class="btn-outline" id="openSyncFromLikesBtn">D1 云端同步设置</button>
+            </div>
+          </section>
+
+          <div class="tabs-bar">
+            <button type="button" class="tab-btn ${appState.likesTab === 'songs' ? 'active' : ''}" data-likes-tab="songs">点赞歌词 (${songs.length})</button>
+            <button type="button" class="tab-btn ${appState.likesTab === 'quotes' ? 'active' : ''}" data-likes-tab="quotes">点赞金句 (${quotes.length})</button>
+            <button type="button" class="tab-btn ${appState.likesTab === 'notes' ? 'active' : ''}" data-likes-tab="notes">单句灵感本 (${notes.length})</button>
+            <button type="button" class="tab-btn ${appState.likesTab === 'dislikes' ? 'active' : ''}" data-likes-tab="dislikes">屏蔽管理 (${dislikes.length})</button>
+          </div>
+
+          <div>${contentHtml}</div>
+        `;
+
+        document.getElementById('exportMdBtn').addEventListener('click', exportLikesMarkdown);
+        document.getElementById('openSyncFromLikesBtn').addEventListener('click', openSyncModal);
+        root.querySelectorAll('[data-likes-tab]').forEach((b) => {
+          b.addEventListener('click', () => {
+            appState.likesTab = b.getAttribute('data-likes-tab');
+            renderLikes();
+          });
+        });
+        root.querySelectorAll('[data-back-home]').forEach((b) => {
+          b.addEventListener('click', () => { appState.route = 'home'; renderAll(); });
+        });
+        root.querySelectorAll('[data-likes-play-full]').forEach((b) => {
+          b.addEventListener('click', () => {
+            const s = appState.user.likedSongs[b.getAttribute('data-likes-play-full')];
+            if (s) startSongPlayback(s, 'full');
+          });
+        });
+        root.querySelectorAll('[data-likes-play-preview]').forEach((b) => {
+          b.addEventListener('click', () => {
+            const s = appState.user.likedSongs[b.getAttribute('data-likes-play-preview')];
+            if (s) startSongPlayback(s, 'preview');
+          });
+        });
+        root.querySelectorAll('[data-play-full]').forEach((b) => {
+          b.addEventListener('click', () => {
+            const s = appState.user.likedSongs[b.getAttribute('data-play-full')];
+            if (s) startSongPlayback(s, 'full');
+          });
+        });
+        root.querySelectorAll('[data-play-preview]').forEach((b) => {
+          b.addEventListener('click', () => {
+            const s = appState.user.likedSongs[b.getAttribute('data-play-preview')];
+            if (s) startSongPlayback(s, 'preview');
+          });
+        });
+        root.querySelectorAll('[data-close-player]').forEach((b) => {
+          b.addEventListener('click', () => { appState.activePlayer = null; renderAll(); });
+        });
+        root.querySelectorAll('[data-unlike-song]').forEach((b) => {
+          b.addEventListener('click', () => {
+            delete appState.user.likedSongs[b.getAttribute('data-unlike-song')];
+            persistUserState(true);
+            renderAll();
+          });
+        });
+        root.querySelectorAll('[data-unlike-quote]').forEach((b) => {
+          b.addEventListener('click', () => {
+            delete appState.user.likedQuotes[b.getAttribute('data-unlike-quote')];
+            persistUserState(true);
+            renderAll();
+          });
+        });
+        root.querySelectorAll('[data-copy-note]').forEach((b) => {
+          b.addEventListener('click', () => {
+            const n = appState.user.notes.find((x) => x.id === b.getAttribute('data-copy-note'));
+            if (n) copyText(`${n.line}\n—— ${n.artist}《${n.songTitle}》${n.note ? '\n批注：' + n.note : ''}`, '已复制单句灵感');
+          });
+        });
+        root.querySelectorAll('[data-del-note]').forEach((b) => {
+          b.addEventListener('click', () => {
+            appState.user.notes = appState.user.notes.filter((x) => x.id !== b.getAttribute('data-del-note'));
+            persistUserState(true);
+            renderAll();
+          });
+        });
+        root.querySelectorAll('[data-remove-dislike]').forEach((b) => {
+          b.addEventListener('click', () => {
+            appState.user.dislikes = appState.user.dislikes.filter((x) => x.id !== b.getAttribute('data-remove-dislike'));
+            persistUserState(true);
+            renderAll();
+            showToast('已撤销屏蔽');
+          });
+        });
+      }
+
+      function renderNeigongList() {
+        const root = document.getElementById('appRoot');
+        document.getElementById('indexRail').innerHTML = '';
+
+        const articles = appState.dates
+          .map((d) => appState.issuesByDate[d]?.neigong)
+          .filter(Boolean);
+
+        root.innerHTML = `
+          <section class="subpage-head">
+            <div>
+              <h1 class="issue-date">内功</h1>
+              <p class="issue-sub">作词方法论每日一篇 · 与当期示范歌词联动 · 点击标题阅读全文</p>
+            </div>
+          </section>
+          <div class="neigong-list">
+            ${articles.map((art) => `
+              <button type="button" class="neigong-card" data-open-art="${escapeHtml(art.date)}">
+                <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:8px;">
+                  <span style="font-size:13px; color:var(--accent-gold); font-family:var(--font-serif);">${escapeHtml(art.date)}</span>
+                  <span class="pill pill-gold">${escapeHtml(art.coreTechnique)}</span>
+                  ${(art.secondaryTechniques || []).map((t) => `<span class="pill">${escapeHtml(t)}</span>`).join('')}
+                </div>
+                <div style="font-family:var(--font-serif); font-size:21px; font-weight:600; margin-bottom:8px;">${escapeHtml(art.title)}</div>
+                <p style="font-size:14px; color:var(--text-secondary); margin:0;">${escapeHtml(art.excerpt)}</p>
+              </button>
+            `).join('')}
+          </div>
+        `;
+
+        root.querySelectorAll('[data-open-art]').forEach((b) => {
+          b.addEventListener('click', () => {
+            appState.route = 'neigong-detail';
+            appState.neigongDate = b.getAttribute('data-open-art');
+            renderAll();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        });
+      }
+
+      function renderNeigongDetail() {
+        const root = document.getElementById('appRoot');
+        document.getElementById('indexRail').innerHTML = '';
+
+        const issue = appState.issuesByDate[appState.neigongDate] || appState.issuesByDate[appState.dates[0]];
+        const art = issue?.neigong;
+        if (!art) {
+          renderNeigongList();
+          return;
+        }
+
+        const linkedSongs = (issue.songs || []).filter((s) => (art.linkedSongIds || []).includes(s.id));
+
+        root.innerHTML = `
+          <article class="neigong-article">
+            <button type="button" class="btn-outline" id="backNeigongListBtn">← 返回内功文章列表</button>
+            <div style="display:flex; align-items:center; gap:10px; margin-top:22px; flex-wrap:wrap;">
+              <span style="font-size:13.5px; color:var(--accent-gold);">${escapeHtml(art.date)}</span>
+              <span class="pill pill-gold">${escapeHtml(art.coreTechnique)}</span>
+              ${(art.secondaryTechniques || []).map((t) => `<span class="pill">${escapeHtml(t)}</span>`).join('')}
+            </div>
+            <h1>${escapeHtml(art.title)}</h1>
+            <p style="font-size:15px; color:var(--text-secondary); line-height:1.85;">${escapeHtml(art.excerpt)}</p>
+
+            ${(art.sections || []).map((sec) => `
+              <section class="neigong-section">
+                <h2>${escapeHtml(sec.heading)}</h2>
+                ${(sec.paragraphs || []).map((p) => `<p>${escapeHtml(p)}</p>`).join('')}
+              </section>
+            `).join('')}
+
+            ${linkedSongs.length ? `
+              <section class="linked-examples">
+                <div style="font-size:13px; color:var(--accent-gold); font-weight:500; margin-bottom:12px;">✦ 本期呼应歌词实例（点击直达对应卡片）</div>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                  ${linkedSongs.map((s) => `
+                    <button type="button" class="search-result-item" style="margin-top:0;" data-jump-issue="${escapeHtml(issue.date)}" data-jump-song="${escapeHtml(s.id)}">
+                      <div style="display:flex; justify-content:space-between; gap:8px;">
+                        <strong style="font-family:var(--font-serif); font-size:16px;">${escapeHtml(s.index)} · 《${escapeHtml(s.title)}》— ${escapeHtml(s.artist)}</strong>
+                        <span class="pill pill-gold">${escapeHtml(s.technique)}</span>
+                      </div>
+                      <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">${escapeHtml(s.neigongMatch?.note || s.reason)}</div>
+                    </button>
+                  `).join('')}
+                </div>
+              </section>
+            ` : ''}
+          </article>
+        `;
+
+        document.getElementById('backNeigongListBtn').addEventListener('click', () => {
+          appState.route = 'neigong';
+          renderAll();
+        });
+
+        root.querySelectorAll('[data-jump-song]').forEach((b) => {
+          b.addEventListener('click', () => {
+            jumpToItem(b.getAttribute('data-jump-issue'), 'song-' + b.getAttribute('data-jump-song'));
+          });
+        });
+      }
+
+      function jumpToItem(date, domId) {
+        appState.currentDate = date;
+        appState.route = 'home';
+        appState.filterLang = '全部';
+        appState.filterEmotion = '全部';
+        appState.filterTechnique = '全部';
+        syncUrlDate(date);
+        renderAll();
+        setTimeout(() => {
+          const el = document.getElementById(domId);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.classList.add('pulse-highlight');
+            setTimeout(() => el.classList.remove('pulse-highlight'), 1800);
+          }
+        }, 60);
+      }
+
+      async function switchIssue(date) {
+        if (!appState.issuesByDate[date] && ENABLE_REMOTE_DATA_FETCH) {
+          try {
+            const res = await fetch(`./data/issues/${encodeURIComponent(date)}.json`);
+            if (res.ok) appState.issuesByDate[date] = await res.json();
+          } catch {
+            // 保留已有缓存
+          }
+        }
+        if (appState.issuesByDate[date]) {
+          appState.currentDate = date;
+          appState.openDislikeMenuId = null;
+          syncUrlDate(date);
+          renderAll();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+
+      function openSearchModal() {
+        const modal = document.getElementById('searchModal');
+        const input = document.getElementById('searchInput');
+        modal.classList.add('open');
+        input.value = '';
+        renderSearchResults('');
+        setTimeout(() => input.focus(), 40);
+      }
+
+      function renderSearchResults(q) {
+        const container = document.getElementById('searchResults');
+        const term = q.trim().toLowerCase();
+        const matches = [];
+
+        appState.dates.forEach((date) => {
+          const issue = appState.issuesByDate[date];
+          if (!issue) return;
+
+          (issue.songs || []).forEach((s) => {
+            const hay = `${s.title} ${s.artist} ${s.lyricist || ''} ${s.emotion} ${s.technique} ${(s.lines || []).join(' ')}`.toLowerCase();
+            if (!term || hay.includes(term)) {
+              matches.push({
+                kind: '歌词',
+                date,
+                title: `《${s.title}》— ${s.artist}`,
+                meta: `${s.emotion} · ${s.technique}`,
+                snippet: (s.lines || [])[0] || '',
+                action: () => jumpToItem(date, 'song-' + s.id)
+              });
+            }
+          });
+
+          (issue.quotes || []).forEach((item) => {
+            const hay = `${item.text} ${item.source} ${item.emotion} ${item.technique}`.toLowerCase();
+            if (term && hay.includes(term)) {
+              matches.push({
+                kind: '金句',
+                date,
+                title: item.source,
+                meta: `${item.emotion} · ${item.technique}`,
+                snippet: item.text.slice(0, 64) + (item.text.length > 64 ? '…' : ''),
+                action: () => jumpToItem(date, 'quote-' + item.id)
+              });
+            }
+          });
+
+          if (issue.neigong) {
+            const art = issue.neigong;
+            const hay = `${art.title} ${art.coreTechnique} ${art.excerpt}`.toLowerCase();
+            if (!term || hay.includes(term)) {
+              matches.push({
+                kind: '内功',
+                date,
+                title: art.title,
+                meta: art.coreTechnique,
+                snippet: art.excerpt.slice(0, 64) + '…',
+                action: () => {
+                  appState.route = 'neigong-detail';
+                  appState.neigongDate = date;
+                  renderAll();
+                }
+              });
+            }
+          }
+        });
+
+        const top = matches.slice(0, 14);
+        if (top.length === 0) {
+          container.innerHTML = `<div style="padding:18px; text-align:center; color:var(--text-muted); font-size:13.5px;">未找到与“${escapeHtml(q)}”匹配的内容。</div>`;
+          return;
+        }
+
+        container.innerHTML = top.map((m, i) => `
+          <button type="button" class="search-result-item" data-sr-idx="${i}">
+            <div style="display:flex; justify-content:space-between; gap:8px; align-items:center;">
+              <strong style="font-family:var(--font-serif); font-size:15px;">${escapeHtml(m.title)}</strong>
+              <span class="pill">${escapeHtml(m.kind)} · ${escapeHtml(m.date)}</span>
+            </div>
+            <div style="font-size:12.5px; color:var(--text-muted); margin-top:4px;">${escapeHtml(m.meta)} · ${escapeHtml(m.snippet)}</div>
+          </button>
+        `).join('');
+
+        container.querySelectorAll('[data-sr-idx]').forEach((b) => {
+          b.addEventListener('click', () => {
+            document.getElementById('searchModal').classList.remove('open');
+            top[Number(b.getAttribute('data-sr-idx'))].action();
+          });
+        });
+      }
+
+      function openSyncModal() {
+        document.getElementById('workerUrlInput').value = appState.sync.workerUrl || '';
+        document.getElementById('workerTokenInput').value = appState.sync.token || '';
+        document.getElementById('importJsonInput').value = '';
+        document.getElementById('syncModal').classList.add('open');
+      }
+
+      function renderAll() {
+        renderTopNav();
+        if (appState.route === 'home') renderHome();
+        else if (appState.route === 'likes') renderLikes();
+        else if (appState.route === 'neigong') renderNeigongList();
+        else if (appState.route === 'neigong-detail') renderNeigongDetail();
+      }
+
+      async function init() {
+        // Load persisted state
+        const savedUser = safeReadStorage(STORAGE_KEY, null);
+        if (savedUser) {
+          appState.user = {
+            likedSongs: savedUser.likedSongs || {},
+            likedQuotes: savedUser.likedQuotes || {},
+            notes: Array.isArray(savedUser.notes) ? savedUser.notes : [],
+            dislikes: Array.isArray(savedUser.dislikes) ? savedUser.dislikes : []
+          };
+        }
+        const savedSync = safeReadStorage(SYNC_KEY, null);
+        if (savedSync) appState.sync = savedSync;
+
+        // Seed embedded issues
+        SEED_ISSUES.forEach((issue) => {
+          appState.issuesByDate[issue.date] = issue;
+        });
+
+        // In D1 production hosting, load live index.json & latest issue dynamically
+        if (ENABLE_REMOTE_DATA_FETCH) {
+          try {
+            const idxRes = await fetch('./data/index.json');
+            if (idxRes.ok) {
+              const idxData = await idxRes.json();
+              for (const meta of idxData.issues || []) {
+                if (!appState.issuesByDate[meta.date]) {
+                  try {
+                    const r = await fetch(`./data/issues/${encodeURIComponent(meta.date)}.json`);
+                    if (r.ok) appState.issuesByDate[meta.date] = await r.json();
+                  } catch {
+                    // 跳过单期加载异常
+                  }
+                }
+              }
+            }
+          } catch {
+            // 本地离线打开时无缝回退至内置核验数据
+          }
+        }
+
+        appState.dates = Object.keys(appState.issuesByDate).sort().reverse();
+        const urlDate = new URLSearchParams(window.location.search).get('date');
+        appState.currentDate = (urlDate && appState.issuesByDate[urlDate]) ? urlDate : appState.dates[0];
+
+        // Global UI bindings
+        document.getElementById('brandHomeBtn').addEventListener('click', () => {
+          appState.route = 'home';
+          renderAll();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        document.getElementById('closeSearchBtn').addEventListener('click', () => {
+          document.getElementById('searchModal').classList.remove('open');
+        });
+        document.getElementById('searchInput').addEventListener('input', (e) => renderSearchResults(e.target.value));
+
+        document.getElementById('closeNoteBtn').addEventListener('click', () => {
+          document.getElementById('noteModal').classList.remove('open');
+        });
+        document.getElementById('saveNoteBtn').addEventListener('click', () => {
+          if (!appState.pendingNote) return;
+          appState.user.notes.unshift({
+            id: `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+            ...appState.pendingNote,
+            note: document.getElementById('noteTextInput').value.trim(),
+            tag: document.getElementById('noteTagInput').value.trim(),
+            createdAt: new Date().toISOString()
+          });
+          persistUserState(true);
+          document.getElementById('noteModal').classList.remove('open');
+          renderTopNav();
+          showToast('已收入单句灵感本');
+        });
+
+        document.getElementById('closeSyncBtn').addEventListener('click', () => {
+          document.getElementById('syncModal').classList.remove('open');
+        });
+        document.getElementById('saveSyncBtn').addEventListener('click', () => {
+          const url = document.getElementById('workerUrlInput').value.trim();
+          const token = document.getElementById('workerTokenInput').value.trim();
+          if (url && !url.startsWith('https://')) {
+            showToast('Worker 地址必须以 https:// 开头');
+            return;
+          }
+          appState.sync = { workerUrl: url, token };
+          safeWriteStorage(SYNC_KEY, appState.sync);
+          if (url) syncToCloud(true);
+          else showToast('已清除云端同步配置，仅使用本地存储');
+        });
+        document.getElementById('pullSyncBtn').addEventListener('click', pullFromCloud);
+
+        document.getElementById('importJsonBtn').addEventListener('click', () => {
+          const raw = document.getElementById('importJsonInput').value.trim();
+          if (!raw) return;
+          try {
+            const parsed = JSON.parse(raw);
+            if (!parsed.date || !Array.isArray(parsed.songs)) {
+              showToast('JSON 格式缺少 date 或 songs 字段');
+              return;
+            }
+            appState.issuesByDate[parsed.date] = parsed;
+            appState.dates = Object.keys(appState.issuesByDate).sort().reverse();
+            appState.currentDate = parsed.date;
+            appState.route = 'home';
+            document.getElementById('syncModal').classList.remove('open');
+            renderAll();
+            showToast(`已导入 ${parsed.date} 期次`);
+          } catch (err) {
+            showToast(`JSON 解析失败：${err.message}`);
+          }
+        });
+
+        // Close popovers & modals on outside click / Escape
+        document.addEventListener('click', () => {
+          if (appState.openDislikeMenuId) {
+            appState.openDislikeMenuId = null;
+            if (appState.route === 'home') renderHome();
+          }
+        });
+        ['searchModal', 'noteModal', 'syncModal'].forEach((id) => {
+          const el = document.getElementById(id);
+          el.addEventListener('click', (e) => {
+            if (e.target === el) el.classList.remove('open');
+          });
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            ['searchModal', 'noteModal', 'syncModal'].forEach((id) => document.getElementById(id).classList.remove('open'));
+          }
+          const tag = (document.activeElement && document.activeElement.tagName) || '';
+          if ((e.key === '/' && tag !== 'INPUT' && tag !== 'TEXTAREA') || ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k')) {
+            e.preventDefault();
+            openSearchModal();
+          }
+        });
+
+        renderAll();
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
