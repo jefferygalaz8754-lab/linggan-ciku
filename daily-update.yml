@@ -1,0 +1,48 @@
+name: Daily Issue Update (08:00 CST)
+
+on:
+  schedule:
+    # 每日 UTC 00:00 = 北京时间早 08:00 整
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: '可选：指定补发日期 YYYY-MM-DD（留空为北京时间今日）'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  generate-daily-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate & Verify Daily Issue
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-2.5-flash' }}
+          FEEDBACK_API_URL: ${{ secrets.FEEDBACK_API_URL }}
+          FEEDBACK_API_TOKEN: ${{ secrets.FEEDBACK_API_TOKEN }}
+          TARGET_DATE: ${{ github.event.inputs.target_date }}
+        run: node scripts/daily_generate.mjs
+
+      - name: Commit & Push New Issue
+        run: |
+          git config user.name "linggan-ciku-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add public/data/
+          if git diff --cached --quiet; then
+            echo "No new issue changes to commit."
+          else
+            git commit -m "chore(daily): publish verified issue $(date -u +'%Y-%m-%d')"
+            git push
+          fi
