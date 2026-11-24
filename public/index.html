@@ -1116,7 +1116,7 @@
       .issue-date { font-size: 21px; }
     }
   .broken-heart{width:17px;height:17px;vertical-align:-3px;background:transparent;fill:none}.neigong-article table{display:block;max-width:100%;overflow:auto;border-collapse:collapse;font-size:14px}.neigong-article td,.neigong-article th{padding:9px;border:1px solid var(--border)}.neigong-article img{max-width:100%}.audio-frame{width:100%;border:0;min-height:100px;background:transparent}
-</style>
+.global-player-dock{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);width:min(760px,calc(100% - 24px));z-index:950;display:none;}.global-player-dock.is-active{display:block;}.global-player-dock .inline-player{background:rgba(15,25,44,0.94);border:1px solid rgba(212,175,55,0.42);border-radius:14px;padding:12px 14px;box-shadow:0 12px 32px rgba(0,0,0,0.45);backdrop-filter:blur(12px);color:#f4f6fb;}.global-player-dock .inline-player-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;font-size:13px;}.global-player-dock .inline-player-meta{font-weight:600;color:#f6e3a8;}.global-player-dock .inline-player-actions{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}.global-player-dock .btn-outline,.global-player-dock .btn-gold{padding:4px 10px;font-size:12px;} </style>
 </head>
 <body>
   <header class="topbar">
@@ -1129,7 +1129,7 @@
     </div>
   </header>
 
-  <main class="page-wrap" id="appRoot"></main>
+  <main class="page-wrap" id="appRoot"></main><div id="globalPlayerDock" class="global-player-dock"></div>
   <aside class="index-rail" id="indexRail" aria-label="快捷目录"></aside>
 
   <!-- 全库跨期搜索弹窗 -->
@@ -1501,7 +1501,7 @@
         return sources.flatMap(source => {
           const id = String(source.id || '');
           if (source.provider === 'spotify' && /^[a-zA-Z0-9]{22}$/.test(id)) return [{...source, label:'Spotify', embed:`https://open.spotify.com/embed/track/${id}`, height:100}];
-          if (source.provider === 'netease' && /^\d+$/.test(id)) return [{...source, label:'网易云音乐', embed:`https://music.163.com/outchain/player?type=2&id=${id}&auto=1&height=66`, height:100}];
+           
           if (source.provider === 'qq' && /^[a-zA-Z0-9]{10,20}$/.test(id)) return [{...source, label:'QQ音乐', embed:`https://i.y.qq.com/n2/m/outchain/player/index.html?songmid=${id}`, height:160}];
           if (source.provider === 'bandcamp' && /^https:\/\/bandcamp\.com\/EmbeddedPlayer\/(?:album|track)=\d+/.test(source.embed || '')) return [{...source, label:'Bandcamp', height:120}];
           return [];
@@ -1520,9 +1520,9 @@
       function advanceAudio(songId) {
         const song = Object.values(appState.issuesByDate).flatMap(issue=>issue.songs || []).find(song=>song.id===songId) || appState.user.likedSongs[songId];
         if (!song || appState.activePlayer?.songId!==songId) return;
-        const next = (appState.activePlayer.sourceIndex || 0)+1;
+        const totalFull = (song.audio && song.audio.youtubeId ? 1 : 0) + audioSources(song).length; const next = (appState.activePlayer.sourceIndex || 0) + 1; if (next >= totalFull) { startSongPlayback(song, 'preview'); return; }
         appState.activePlayer = {...appState.activePlayer, sourceIndex:next};
-        renderAll();
+        renderGlobalPlayer();
       }
       document.addEventListener('click', event => {
         const button=event.target.closest('[data-next-audio]');
@@ -1532,7 +1532,7 @@
         // Clicking the same active mode toggles it off
         if (appState.activePlayer && appState.activePlayer.songId === song.id && appState.activePlayer.mode === mode) {
           appState.activePlayer = null;
-          renderAll();
+          renderGlobalPlayer();
           return;
         }
 
@@ -1540,7 +1540,7 @@
           const ytId = song.audio && song.audio.youtubeId;
           if (audioSources(song).length || ytId) {
             appState.activePlayer = { songId: song.id, mode: 'full', sourceIndex: 0, loading: false, previewUrl: '', error: '' };
-            renderAll();
+            renderGlobalPlayer();
             return;
           }
           // Fallback to 30s preview if no YouTube ID
@@ -1550,12 +1550,12 @@
         const cached = (song.audio && song.audio.previewUrl) || appState.previewCache[song.id];
         if (cached) {
           appState.activePlayer = { songId: song.id, mode: 'preview', loading: false, previewUrl: cached, error: '' };
-          renderAll();
+          renderGlobalPlayer();
           return;
         }
 
         appState.activePlayer = { songId: song.id, mode: 'preview', loading: true, previewUrl: '', error: '' };
-        renderAll();
+        renderGlobalPlayer();
 
         try {
           const q = encodeURIComponent(`${song.title} ${song.artist}`);
@@ -1590,65 +1590,11 @@
             error: '当前网络无法连接 iTunes 试听接口，请点击“播放全曲”或稍后重试。'
           };
         }
-        renderAll();
+        renderGlobalPlayer();
       }
 
-      function renderInlinePlayer(song) {
-        const p = appState.activePlayer;
-        if (!p || p.songId !== song.id) return '';
-        const ytId = song.audio && song.audio.youtubeId;
-        const sources = audioSources(song);
-        const source = sources[p.sourceIndex || 0];
-        if (p.mode === 'full' && source) {
-          return `<div class="player-panel"><div class="player-head"><span>♫ 音频优先 · ${escapeHtml(source.label)} · 《${escapeHtml(song.title)}》</span><div><button type="button" class="icon-btn" data-next-audio="${escapeHtml(song.id)}">无法播放？${(p.sourceIndex || 0)+1 < sources.length ? '换个音源' : (ytId ? '切换 YouTube' : '关闭此音源')}</button><button type="button" class="icon-btn" data-close-player>收起</button></div></div><iframe class="audio-frame" height="${source.height}" src="${escapeHtml(source.embed)}" title="${escapeHtml(source.label+' · '+song.title)}" allow="autoplay; encrypted-media" loading="eager"></iframe><p style="font-size:12px;color:var(--text-muted)">完整播放以平台版权、地区与登录状态为准；若显示试听或无版权，可切换其他音源。</p></div>`;
-        }
-        if (p.mode === 'full' && !ytId) return `<div class="player-panel">暂无其他可用音源。<button type="button" class="icon-btn" data-play-preview="${escapeHtml(song.id)}">30 秒试听</button><button type="button" class="icon-btn" data-close-player>收起</button></div>`;
-        if (p.mode === 'full' && ytId) {
-          const ytWatch = `https://www.youtube.com/watch?v=${encodeURIComponent(ytId)}`;
-          return `
-            <div class="player-panel">
-              <div class="player-head">
-                <span>♫ 正在播放全曲 · 《${escapeHtml(song.title)}》— ${escapeHtml(song.artist)}</span>
-                <div style="display:flex; gap:8px; align-items:center;">
-                  <button type="button" class="icon-btn" data-play-preview="${escapeHtml(song.id)}">切到 30 秒片段</button>
-                  <a class="icon-btn" href="${ytWatch}" target="_blank" rel="noopener noreferrer">YouTube 打开 ↗</a>
-                  <button type="button" class="icon-btn" data-close-player>收起</button>
-                </div>
-              </div>
-              <div class="yt-frame-wrap">
-                <iframe
-                  src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(ytId)}?autoplay=1&rel=0"
-                  title="${escapeHtml(song.title)} - ${escapeHtml(song.artist)}"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen>
-                </iframe>
-              </div>
-            </div>
-          `;
-        }
-
-        let bodyHtml = '';
-        if (p.loading) {
-          bodyHtml = `<div style="font-size:13px; color:var(--text-secondary); padding:6px 0;">正在拉取官方 30 秒试听片段…</div>`;
-        } else if (p.error) {
-          bodyHtml = `<div style="font-size:13px; color:var(--danger); padding:4px 0;">${escapeHtml(p.error)}</div>`;
-        } else if (p.previewUrl) {
-          bodyHtml = `<audio class="audio-native" controls autoplay src="${escapeHtml(p.previewUrl)}"></audio>`;
-        }
-
-        return `
-          <div class="player-panel">
-            <div class="player-head">
-              <span>♪ 30 秒官方片段试听 · 《${escapeHtml(song.title)}》— ${escapeHtml(song.artist)}</span>
-              <div style="display:flex; gap:8px; align-items:center;">
-                ${(audioSources(song).length || ytId) ? `<button type="button" class="icon-btn" data-play-full="${escapeHtml(song.id)}">切到全曲播放</button>` : ''}
-                <button type="button" class="icon-btn" data-close-player>收起</button>
-              </div>
-            </div>
-            ${bodyHtml}
-          </div>
-        `;
-      }
+    function renderGlobalPlayer() { const dock = document.getElementById('globalPlayerDock'); if (!dock) return; const p = appState.activePlayer; if (!p) { dock.innerHTML = ''; dock.classList.remove('is-active'); return; } const song = Object.values(appState.issuesByDate).flatMap(i => i.songs || []).find(s => s.id === p.songId) || appState.user.likedSongs[p.songId]; if (!song) { dock.innerHTML = ''; dock.classList.remove('is-active'); return; } const ytId = song.audio && song.audio.youtubeId; const fullSources = []; if (ytId) fullSources.push({ provider: 'youtube', label: 'YouTube 官方MV/音频', embed: 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(ytId) + '?autoplay=1&rel=0', height: 220 }); audioSources(song).forEach(s => fullSources.push(s)); const ytSearchUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(song.title + ' ' + song.artist); const ytOpenUrl = ytId ? 'https://www.youtube.com/watch?v=' + encodeURIComponent(ytId) : ytSearchUrl; const ytLabel = ytId ? 'YouTube ↗' : 'YouTube 搜索 ↗'; let html = ''; if (p.mode === 'full') { const active = fullSources[p.sourceIndex || 0]; if (!active) { startSongPlayback(song, 'preview'); return; } const nextText = (p.sourceIndex || 0) + 1 < fullSources.length ? '换个音源' : '切换音源(30秒)'; const frameHtml = active.provider === 'youtube' ? '<div class="yt-frame-wrap"><iframe src="' + escapeHtml(active.embed) + '" title="' + escapeHtml(song.title + ' - ' + song.artist) + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>' : '<iframe class="audio-frame" height="' + active.height + '" src="' + escapeHtml(active.embed) + '" title="' + escapeHtml(active.label + ' · ' + song.title) + '" allow="autoplay; encrypted-media" loading="eager"></iframe>'; html = '<div class="inline-player"><div class="inline-player-head"><span class="inline-player-meta">♫ ' + escapeHtml(active.label) + ' · 《' + escapeHtml(song.title) + '》 - ' + escapeHtml(song.artist) + '</span><div class="inline-player-actions"><button type="button" class="btn-outline" data-cycle-source="' + escapeHtml(song.id) + '">' + nextText + '</button><button type="button" class="btn-outline" data-play-preview="' + escapeHtml(song.id) + '">30 秒片段</button><a class="btn-outline" href="' + escapeHtml(ytSearchUrl) + '" target="_blank" rel="noopener noreferrer">YouTube 搜索 ↗</a>' + (ytId ? '<a class="btn-outline" href="' + escapeHtml(ytOpenUrl) + '" target="_blank" rel="noopener noreferrer">' + ytLabel + '</a>' : '') + '<button type="button" class="icon-btn" data-close-player title="收起播放器">收起</button></div></div>' + frameHtml + '</div>'; } else { const bodyHtml = p.loading ? '<div style="font-size:13px;color:var(--text-secondary);padding:6px 0;">正在拉取官方 30 秒试听片段...</div>' : p.error ? '<div style="font-size:13px;color:var(--danger);padding:4px 0;">' + escapeHtml(p.error) + '</div>' : p.previewUrl ? '<audio class="audio-native" controls autoplay src="' + escapeHtml(p.previewUrl) + '"></audio>' : ''; html = '<div class="inline-player"><div class="inline-player-head"><span class="inline-player-meta">♪ 30 秒官方片段试听 · 《' + escapeHtml(song.title) + '》 - ' + escapeHtml(song.artist) + '</span><div class="inline-player-actions">' + (fullSources.length ? '<button type="button" class="btn-outline" data-play-full="' + escapeHtml(song.id) + '">切到全曲</button>' : '') + '<a class="btn-outline" href="' + escapeHtml(ytSearchUrl) + '" target="_blank" rel="noopener noreferrer">YouTube 搜索 ↗</a><button type="button" class="icon-btn" data-close-player title="收起播放器">收起</button></div></div>' + bodyHtml + '</div>'; } dock.innerHTML = html; dock.classList.add('is-active'); dock.querySelectorAll('[data-close-player]').forEach(btn => btn.addEventListener('click', () => { appState.activePlayer = null; renderGlobalPlayer(); })); dock.querySelectorAll('[data-cycle-source]').forEach(btn => btn.addEventListener('click', () => advanceAudio(btn.getAttribute('data-cycle-source')))); dock.querySelectorAll('[data-play-preview]').forEach(btn => btn.addEventListener('click', () => startSongPlayback(song, 'preview'))); dock.querySelectorAll('[data-play-full]').forEach(btn => btn.addEventListener('click', () => startSongPlayback(song, 'full'))); }
+      
 
       function renderTopNav() {
         const nav = document.getElementById('topNav');
@@ -1839,7 +1785,7 @@
                       </div>
                     </div>
                     ${neigongHtml}
-                    ${renderInlinePlayer(song)}
+                     
                     ${bilingualToggleHtml}
                     ${lyricHtml}
                     <div class="reason-box">
@@ -2061,7 +2007,7 @@
         document.querySelectorAll('[data-close-player]').forEach((btn) => {
           btn.addEventListener('click', () => {
             appState.activePlayer = null;
-            renderAll();
+            renderGlobalPlayer();
           });
         });
 
@@ -2145,7 +2091,7 @@
                   </div>
                 </div>
                 <div style="font-family:var(--font-serif); font-size:15.5px; line-height:1.85; color:var(--text-secondary);">
-                  ${renderInlinePlayer(s)}${(s.lines || []).map((l) => `<div>${escapeHtml(l)}</div>`).join('')}
+                   ${(s.lines || []).map((l) => `<div>${escapeHtml(l)}</div>`).join('')}
                 </div>
               </div>
             `).join('');
