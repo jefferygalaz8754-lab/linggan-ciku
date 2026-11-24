@@ -14,7 +14,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isBlockedByKtvList, normalizeText, verifySongWithLrclib } from './verify_lyrics.mjs';
-import { extractYoutubeId, resolveItunesPreview, resolveAudioSources } from './resolve_audio.mjs';
+import { resolveYoutubeId, resolveItunesPreview, resolveAudioSources } from './resolve_audio.mjs';
 
 
 /* Vendored jsonrepair 3.15.0, https://github.com/josdejong/jsonrepair
@@ -1328,7 +1328,7 @@ async function main() {
       };
       const itunes = await resolveItunesPreview(song.title, song.artist);
       song.audio = {
-        youtubeId: extractYoutubeId(song.audio?.youtubeId || ''),
+        youtubeId: await resolveYoutubeId(song.audio?.youtubeId || ''),
         sources: await resolveAudioSources(song.title, song.artist, song.audio?.sources),
         previewUrl: itunes?.previewUrl || '',
         appleMusicUrl: itunes?.appleMusicUrl || ''
