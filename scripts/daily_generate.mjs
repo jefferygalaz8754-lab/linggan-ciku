@@ -109,6 +109,7 @@ async function callGeminiJson(prompt) {
 
   const res = await fetch(endpoint, {
     method: 'POST',
+    signal: AbortSignal.timeout(240000),
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -221,8 +222,17 @@ async function main() {
   const validSongs = [];
   const rejected = [];
 
-  for (const song of draft.songs || []) {
+  const attemptedKeys = new Set();
+  let candidates = draft.songs || [];
+  for (let round=0; round<3 && validSongs.length<10; round++) {
+  for (const song of candidates) {
+    if(validSongs.length>=10) break;
+    const language = song.language==='外文' ? '外文' : '中文';
+    song.language = language;
+    if(validSongs.filter(s=>s.language===language).length >= (language==='外文'?3:7)) continue;
     const key = `${normalizeText(song.title)}::${normalizeText(song.artist)}`;
+    if (attemptedKeys.has(key)) continue;
+    attemptedKeys.add(key);
     const ktvCheck = isBlockedByKtvList(song.title, song.artist, blacklist);
     if (ktvCheck.blocked) {
       rejected.push({ song: song.title, reason: ktvCheck.reason });
@@ -241,7 +251,7 @@ async function main() {
     if (verify.ok) {
       song.verification = {
         status: 'verified',
-        method: `LRCLIB 原词核验（命中 ${Math.round(verify.matchedRatio * 100)}%）`,
+        method: `${verify.sourceName}（命中 ${Math.round(verify.matchedRatio * 100)}%）`,
         sourceName: verify.sourceName,
         sourceUrl: verify.sourceUrl
       };
@@ -258,10 +268,18 @@ async function main() {
     }
   }
 
-  console.log(`[verify] 初轮通过 ${validSongs.length} 首，淘汰 ${rejected.length} 首：`, rejected);
+  console.log(`[verify] 第 ${round+1} 轮累计通过 ${validSongs.length} 首`);
+  if(validSongs.length<10 && round<2) {
+    const missingChinese=7-validSongs.filter(s=>s.language==='中文').length;
+    const missingForeign=3-validSongs.filter(s=>s.language==='外文').length;
+    const refill = await callGeminiJson(buildDailyPrompt({dateInfo,history,blacklist,prefs})+`\n【补选轮次】已有 ${validSongs.length} 首核验通过。请只返回 {"songs":[...]}。本轮候选提供 ${Math.max(0,missingChinese*2)} 首中文和 ${Math.max(0,missingForeign*2)} 首外文，保持每首歌词、分析和标签字段完整。不要重复这些已尝试曲目：${[...attemptedKeys].join('、')}。上轮失败：${JSON.stringify(rejected)}。优先选官方词库可检索的真实原词。`);
+    candidates=(refill.songs || []).map((song,i)=>({...song,id:`replacement-${round}-${i}`}));
+  }
+  }
+  console.log(`[verify] 最终通过 ${validSongs.length} 首，淘汰 ${rejected.length} 首：`, rejected);
 
-  if (validSongs.length < 6) {
-    throw new Error(`原词核验通过数过低（仅 ${validSongs.length} 首），中止发布以防假词入库。`);
+  if (validSongs.length < 10) {
+    throw new Error(`三轮补选后仍未凑齐 10 首核验歌曲（仅 ${validSongs.length} 首），中止发布。`);
   }
 
   // 重新编号并过滤重复金句与超长金句
