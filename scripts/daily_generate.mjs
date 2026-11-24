@@ -116,7 +116,8 @@ async function callGeminiJson(prompt) {
       tools: [{ google_search: {} }],
       generationConfig: {
         temperature: 0.7,
-        responseMimeType: 'application/json'
+        responseMimeType: 'application/json',
+        thinkingConfig: { thinkingLevel: 'low' }
       }
     })
   });
@@ -227,7 +228,7 @@ async function main() {
   for (let round=0; round<3 && validSongs.length<10; round++) {
   for (const song of candidates) {
     if(validSongs.length>=10) break;
-    const language = song.language==='外文' ? '外文' : '中文';
+    const language = /外文|英文|英语|English|日文|日语|韩文|韩语|法文|法语|西班牙/i.test(String(song.language)) ? '外文' : '中文';
     song.language = language;
     if(validSongs.filter(s=>s.language===language).length >= (language==='外文'?3:7)) continue;
     const key = `${normalizeText(song.title)}::${normalizeText(song.artist)}`;
@@ -268,7 +269,7 @@ async function main() {
     }
   }
 
-  console.log(`[verify] 第 ${round+1} 轮累计通过 ${validSongs.length} 首`);
+  console.log(`[verify] 第 ${round+1} 轮累计通过 ${validSongs.length} 首；淘汰明细：`,rejected);
   if(validSongs.length<10 && round<2) {
     const missingChinese=7-validSongs.filter(s=>s.language==='中文').length;
     const missingForeign=3-validSongs.filter(s=>s.language==='外文').length;
