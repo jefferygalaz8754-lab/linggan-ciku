@@ -1,3 +1,5 @@
+import { normalizeText } from './verify_lyrics.mjs';
+
 /**
  * 音频试听解析模块（全曲 YouTube ID + iTunes 30 秒官方片段兜底）
  * 每日早 8 点生成新期次时自动为每首通过核验的歌曲补全可试听链接
@@ -47,13 +49,12 @@ export async function resolveAudioSources(title, artist, supplied = []) {
     const params = new URLSearchParams({s:`${title} ${artist}`,type:'1',offset:'0',limit:'8'});
     const response = await fetch(`https://music.163.com/api/search/get/web?${params}`, {signal:AbortSignal.timeout(12000)});
     const data = await response.json();
-    const normalize = text => String(text).toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
-    const hit = (data.result?.songs || []).find(s => normalize(s.name)===normalize(title) && (s.artists || []).some(a=>normalize(a.name)===normalize(artist)));
-    if (hit) {
-      const rights=await fetch(`https://music.163.com/api/song/enhance/player/url?ids=${encodeURIComponent(JSON.stringify([hit.id]))}&br=128000`,{signal:AbortSignal.timeout(12000)});
-      const track=(await rights.json()).data?.[0];
-      if(track?.url && !track.freeTrialInfo) valid.push({provider:'netease',id:String(hit.id)});
-    }
+    const normalize = text => normalizeText(text).replace(/[^\p{L}\p{N}]/gu,'');
+    const sameArtist = name => normalize(name)===normalize(artist) || (/[\u3400-\u9fff]/.test(artist) && normalize(name).replace(/[^\u3400-\u9fff]/g,'')===normalize(artist).replace(/[^\u3400-\u9fff]/g,''));
+    const hit = (data.result?.songs || []).find(s => normalize(s.name)===normalize(title) && (s.artists || []).some(a=>sameArtist(a.name)));
+    // The official player resolves access in the visitor's region and login session.
+    // A missing stream URL in a CI runner's region must not hide that audio player.
+    if (hit) valid.push({provider:'netease',id:String(hit.id)});
   } catch (error) { console.warn('[audio] 音频检索不可用：', error.name); }
   return valid;
 }
