@@ -1202,7 +1202,7 @@ function buildDailyPrompt({ dateInfo, history, blacklist, prefs }) {
   return `你是「灵感词库」的每日主编，请为 ${dateInfo.displayDate} 生成新一期内容，严格返回合法 JSON（不要 Markdown 包裹）。
 
 【核心铁律】
-1. 必须联网核验每一首歌词的真实原词，严禁凭记忆编造任何一句不存在的歌词；每首歌只摘录 1 行真实原词。中文摘录最多 18 个汉字；外文摘录最多 5 个单词，中译最多 8 个汉字。其余写原创技法分析，reason 和内功文章不要额外引用歌词。附真实可打开的资料来源 URL。
+1. 必须联网核验每一首歌词的真实原词，严禁凭记忆编造任何一句不存在的歌词；每首歌截取 2–3 个真实原词段落、共 8–14 行（约 10 行），中文摘录约 150–240 字符，外文摘录约 200–320 字符（外文 translations 数组与 lines 逐行一一对应、长度一致），严禁编造假词。其余写原创技法分析，reason 和内功文章不要额外引用歌词。附真实可打开的资料来源 URL。
 2. 共 10 首歌：7 首中文 + 3 首外文（外文必须提供与 lines 一一对应的 translations 数组，长度严格一致）。
 3. 中文选曲配比：
    - 港台流行顶级词作 3 首（林夕、黄伟文、葛大为、Hush、李焯雄、周耀辉等执笔的非 KTV 烂大街佳作）
@@ -1317,7 +1317,7 @@ async function main() {
     }
 
     const quotedText = [...(song.lines || []), ...(song.translations || [])].join(' ');
-    if(citationUnits(quotedText)>10) {rejected.push({song:song.title,reason:'歌词短摘录超出长度限制'});continue;}
+    // removed citationUnits(quotedText) > 10 limit for 8-14 lines
     const verify = await verifySongWithLrclib(song);
     if (verify.ok) {
       song.verification = {
