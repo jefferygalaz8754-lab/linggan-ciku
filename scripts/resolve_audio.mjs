@@ -58,3 +58,13 @@ export async function resolveAudioSources(title, artist, supplied = []) {
   } catch (error) { console.warn('[audio] 音频检索不可用：', error.name); }
   return valid;
 }
+
+
+export async function resolveYoutubeId(value) {
+  const id=extractYoutubeId(value);
+  if(!id) return '';
+  try {
+    const response=await fetch(`https://www.youtube.com/oembed?format=json&url=${encodeURIComponent('https://www.youtube.com/watch?v='+id)}`,{signal:AbortSignal.timeout(10000)});
+    return response.ok ? id : '';
+  } catch {return '';}
+}
