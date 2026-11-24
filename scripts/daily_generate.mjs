@@ -1082,6 +1082,8 @@ const BLACKLIST_PATH = path.join(__dirname, 'ktv_blacklist.json');
 
 const WEEKDAYS = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
 
+function citationUnits(text='') { const han=(String(text).match(/[\u3400-\u9fff]/g)||[]).length; const words=(String(text).replace(/[\u3400-\u9fff]/g,' ').match(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu)||[]).length; return han/2+words; }
+
 function getBeijingDateParts(customDate) {
   if (customDate && /^\d{4}-\d{2}-\d{2}$/.test(customDate)) {
     const [y, m, d] = customDate.split('-').map(Number);
@@ -1200,7 +1202,7 @@ function buildDailyPrompt({ dateInfo, history, blacklist, prefs }) {
   return `你是「灵感词库」的每日主编，请为 ${dateInfo.displayDate} 生成新一期内容，严格返回合法 JSON（不要 Markdown 包裹）。
 
 【核心铁律】
-1. 必须联网核验每一首歌词的真实原词，严禁凭记忆编造任何一句不存在的歌词；每首歌截取 2-3 个真实段落（8-12 行），附真实可打开的资料来源 URL。
+1. 必须联网核验每一首歌词的真实原词，严禁凭记忆编造任何一句不存在的歌词；每首歌只摘录 1 行真实原词。中文摘录最多 18 个汉字；外文摘录最多 5 个单词，中译最多 8 个汉字。其余写原创技法分析，reason 和内功文章不要额外引用歌词。附真实可打开的资料来源 URL。
 2. 共 10 首歌：7 首中文 + 3 首外文（外文必须提供与 lines 一一对应的 translations 数组，长度严格一致）。
 3. 中文选曲配比：
    - 港台流行顶级词作 3 首（林夕、黄伟文、葛大为、Hush、李焯雄、周耀辉等执笔的非 KTV 烂大街佳作）
@@ -1212,7 +1214,7 @@ function buildDailyPrompt({ dateInfo, history, blacklist, prefs }) {
    - 点赞偏好（最多倾斜 50% 席位，其余保留探索多样性）：情绪=${prefs.likedEmotions.join('、') || '无'}；技法=${prefs.likedTechniques.join('、') || '无'}
    - 严格屏蔽歌手/作者：${prefs.blockedArtists.join('、') || '无'}
    - 严格屏蔽技法/情绪：${prefs.blockedTags.join('、') || '无'}
-7. 金句粮草库 20 条：以小说、散文、外国文学、纪实访谈、优质影视/网文为主（不要古诗词与现当代诗歌），单条 ≤ 200 字，每条标注双维度标签 emotion（情绪底色）与 technique（修辞/技法）。
+7. 金句粮草库 20 条：以小说、散文、外国文学、纪实访谈、优质影视/网文为主（不要古诗词与现当代诗歌），每个作品只引用 1 条，单条中文最多 40 字、外文最多 25 个单词；每条标注双维度标签 emotion（情绪底色）与 technique（修辞/技法）。
 8. 内功文章 1 篇：避开历史标题（${history.neigongTitles.slice(0, 30).join('、')}），聚焦一个具体作词技法，并与本期 2-3 首歌联动（在对应歌曲写入 neigongMatch: { note, highlightLines }）。
 
 返回 JSON 结构：
@@ -1257,7 +1259,7 @@ function buildDailyPrompt({ dateInfo, history, blacklist, prefs }) {
       "category": "文学摘录",
       "emotion": "情绪底色",
       "technique": "修辞技法",
-      "text": "≤200字金句",
+      "text": "≤40字短金句",
       "source": "作者 · 《作品名》"
     }
   ]
@@ -1314,6 +1316,8 @@ async function main() {
       continue;
     }
 
+    const quotedText = [...(song.lines || []), ...(song.translations || [])].join(' ');
+    if(citationUnits(quotedText)>10) {rejected.push({song:song.title,reason:'歌词短摘录超出长度限制'});continue;}
     const verify = await verifySongWithLrclib(song);
     if (verify.ok) {
       song.verification = {
@@ -1363,16 +1367,17 @@ async function main() {
   }
   draft.date = dateInfo.date;
   draft.displayDate = dateInfo.displayDate;
-  draft.summary = `${draft.songs.length} 首核验歌词 · ${(draft.quotes || []).length} 条金句 · 1 篇内功`;
 
   draft.quotes = (draft.quotes || [])
-    .filter((q) => q.text && q.text.length <= 200 && !history.quoteTexts.has(normalizeText(q.text).slice(0, 24)))
+    .filter((q) => q.text && q.text.length <= 100 && citationUnits(q.text) <= 25 && (q.text.match(/[\u3400-\u9fff]/g) || []).length <= 40 && !history.quoteTexts.has(normalizeText(q.text).slice(0, 24)))
     .slice(0, 20)
     .map((q, i) => ({
       ...q,
       id: `${dateInfo.date}-q${String(i + 1).padStart(2, '0')}`,
       index: String(i + 1).padStart(2, '0')
     }));
+
+  draft.summary = `${draft.songs.length} 首核验短摘录 · ${draft.quotes.length} 条金句 · 1 篇内功`;
 
   await fs.writeFile(targetFile, JSON.stringify(draft, null, 2), 'utf8');
 
