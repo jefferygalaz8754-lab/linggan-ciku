@@ -106,10 +106,7 @@ async function verifySongWithLrclibOnly(song) {
   }
 
   const charCount = normalizeText(lines.join('')).length;
-  const quoted=lines.join(' ');
-  const han=(quoted.match(/[\u3400-\u9fff]/g)||[]).length;
-  const words=(quoted.replace(/[\u3400-\u9fff]/g,' ').match(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu)||[]).length;
-  if (charCount<4 || han/2+words>10) return {ok:false,reason:'歌词摘录长度不合要求（至少 4 字符，最多 10 词的短摘录）'};
+  if (charCount<4) return {ok:false,reason:'歌词摘录长度不合要求（至少 4 字符）'};
 
   try {
     const query = new URLSearchParams({
