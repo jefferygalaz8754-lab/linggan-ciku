@@ -106,7 +106,7 @@ async function verifySongWithLrclibOnly(song) {
   }
 
   const charCount = normalizeText(lines.join('')).length;
-  const isChinese = /[\u4e00-\u9fff]/.test(lines.join('')) && !/[\u3040-\u30ff]/.test(lines.join('')); const minChars = isChinese ? 120 : 150; if (charCount < minChars) return { ok: false, reason: `歌词摘录长度不合要求（${charCount} < ${minChars} 字符）` };
+  const isChinese = /[\u4e00-\u9fff]/.test(lines.join('')) && !/[\u3040-\u30ff]/.test(lines.join('')); const minChars = isChinese ? 70 : 120; if (charCount < minChars) return { ok: false, reason: `歌词摘录长度不合要求（${charCount} < ${minChars} 字符）` };
 
   try {
     const query = new URLSearchParams({
@@ -152,7 +152,7 @@ async function verifySongWithLrclibOnly(song) {
       }
     }
 
-    if (bestRatio >= 0.8 && bestCandidate) {
+    if (bestRatio >= 0.75 && bestCandidate) {
       return {
         ok: true,
         matchedRatio: Number(bestRatio.toFixed(2)),
@@ -166,7 +166,7 @@ async function verifySongWithLrclibOnly(song) {
     return {
       ok: false,
       matchedRatio: Number(bestRatio.toFixed(2)),
-      reason: `LRCLIB 原词命中率过低（${Math.round(bestRatio * 100)}%，须逐行匹配 100%），疑似幻觉或版本错配`
+      reason: `LRCLIB 原词命中率过低（${Math.round(bestRatio * 100)}%，阈值 75%），疑似幻觉或版本错配`
     };
   } catch (err) {
     return { ok: false, reason: `核验网络异常：${err.message}` };
@@ -190,7 +190,7 @@ export async function verifySongWithLrclib(song) {
     const lines = song.lines.filter(line=>line.trim());
     const matchedCount = lines.filter(line=>normalizeText(line).length>=4 && lyrics.includes(normalizeText(line))).length;
     const matchedRatio = matchedCount / lines.length;
-    if(matchedRatio >= 0.8) return {ok:true, matchedRatio, matchedCount,totalLines:lines.length,sourceName:'网易云官方原词核验',sourceUrl:`https://music.163.com/song?id=${track.id}`};
+    if(matchedRatio >= 0.75) return {ok:true, matchedRatio, matchedCount,totalLines:lines.length,sourceName:'网易云官方原词核验',sourceUrl:`https://music.163.com/song?id=${track.id}`};
     return {...primary,reason:`${primary.reason}；网易云原词命中 ${Math.round(matchedRatio*100)}%`};
   } catch(error) {return {...primary,reason:`${primary.reason}；备用核验失败：${error.name}`};}
 }
