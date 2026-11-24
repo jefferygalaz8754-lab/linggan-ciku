@@ -101,15 +101,15 @@ export function isBlockedByKtvList(title, artist, blacklistConfig) {
  */
 async function verifySongWithLrclibOnly(song) {
   const lines = Array.isArray(song.lines) ? song.lines.filter((l) => l.trim().length > 0) : [];
-  if (lines.length < 4) {
-    return { ok: false, reason: `歌词行数不足（${lines.length} 行，至少需要 4 行）` };
+  if (lines.length < 1) {
+    return { ok: false, reason: `歌词行数不足（${lines.length} 行，至少需要 1 行）` };
   }
 
-  const charCount = lines.join('').replace(/\s+/g, '').length;
-  const minChars = song.language === '外文' ? 140 : 90;
-  if (charCount < minChars) {
-    return { ok: false, reason: `歌词字数不足（${charCount} 字符，低于下限 ${minChars}）` };
-  }
+  const charCount = normalizeText(lines.join('')).length;
+  const quoted=lines.join(' ');
+  const han=(quoted.match(/[\u3400-\u9fff]/g)||[]).length;
+  const words=(quoted.replace(/[\u3400-\u9fff]/g,' ').match(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu)||[]).length;
+  if (charCount<4 || han/2+words>10) return {ok:false,reason:'歌词摘录长度不合要求（至少 4 字符，最多 10 词的短摘录）'};
 
   try {
     const query = new URLSearchParams({
@@ -155,7 +155,7 @@ async function verifySongWithLrclibOnly(song) {
       }
     }
 
-    if (bestRatio >= 0.65 && bestCandidate) {
+    if (bestRatio === 1 && bestCandidate) {
       return {
         ok: true,
         matchedRatio: Number(bestRatio.toFixed(2)),
@@ -169,7 +169,7 @@ async function verifySongWithLrclibOnly(song) {
     return {
       ok: false,
       matchedRatio: Number(bestRatio.toFixed(2)),
-      reason: `LRCLIB 原词命中率过低（${Math.round(bestRatio * 100)}%，阈值 65%），疑似幻觉或版本错配`
+      reason: `LRCLIB 原词命中率过低（${Math.round(bestRatio * 100)}%，须逐行匹配 100%），疑似幻觉或版本错配`
     };
   } catch (err) {
     return { ok: false, reason: `核验网络异常：${err.message}` };
@@ -180,7 +180,7 @@ async function verifySongWithLrclibOnly(song) {
 // Official NetEase metadata resolves Chinese artist names that LRCLIB stores in Latin script.
 export async function verifySongWithLrclib(song) {
   const primary = await verifySongWithLrclibOnly(song);
-  if (primary.ok || !Array.isArray(song.lines) || song.lines.length < 4) return primary;
+  if (primary.ok || !Array.isArray(song.lines) || song.lines.length < 1 || /长度不合要求/.test(primary.reason || '')) return primary;
   try {
     const query = new URLSearchParams({s:`${song.title} ${song.artist}`,type:'1',limit:'10'});
     const search = await fetch(`https://music.163.com/api/search/get/web?${query}`,{signal:AbortSignal.timeout(15000)});
@@ -193,7 +193,7 @@ export async function verifySongWithLrclib(song) {
     const lines = song.lines.filter(line=>line.trim());
     const matchedCount = lines.filter(line=>normalizeText(line).length>=4 && lyrics.includes(normalizeText(line))).length;
     const matchedRatio = matchedCount / lines.length;
-    if(matchedRatio >= .65) return {ok:true, matchedRatio, matchedCount,totalLines:lines.length,sourceName:'网易云官方原词核验',sourceUrl:`https://music.163.com/song?id=${track.id}`};
+    if(matchedRatio === 1) return {ok:true, matchedRatio, matchedCount,totalLines:lines.length,sourceName:'网易云官方原词核验',sourceUrl:`https://music.163.com/song?id=${track.id}`};
     return {...primary,reason:`${primary.reason}；网易云原词命中 ${Math.round(matchedRatio*100)}%`};
   } catch(error) {return {...primary,reason:`${primary.reason}；备用核验失败：${error.name}`};}
 }
