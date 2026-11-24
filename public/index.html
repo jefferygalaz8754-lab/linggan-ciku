@@ -1507,6 +1507,16 @@
           return [];
         }).sort((a,b)=>priority[a.provider]-priority[b.provider]).filter((v,i,all)=>all.findIndex(x=>x.embed===v.embed)===i);
       }
+      function officialLyricsUrl(song) {
+        const sources=audioSources(song);
+        const netease=sources.find(source=>source.provider==='netease');
+        if(netease) return `https://music.163.com/song?id=${netease.id}`;
+        const spotify=sources.find(source=>source.provider==='spotify');
+        if(spotify) return `https://open.spotify.com/track/${spotify.id}`;
+        const qq=sources.find(source=>source.provider==='qq');
+        if(qq) return `https://y.qq.com/n/ryqq/songDetail/${qq.id}`;
+        try {const url=new URL(song.verification?.sourceUrl || '');return url.protocol==='https:' ? url.href : '';} catch {return '';}
+      }
       function advanceAudio(songId) {
         const song = Object.values(appState.issuesByDate).flatMap(issue=>issue.songs || []).find(song=>song.id===songId) || appState.user.likedSongs[songId];
         if (!song || appState.activePlayer?.songId!==songId) return;
@@ -1840,6 +1850,7 @@
                       ${(audioSources(song).length || song.audio?.youtubeId) ? `<button type="button" class="act-btn ${appState.activePlayer?.songId === song.id && appState.activePlayer?.mode === 'full' ? 'playing' : ''}" data-play-full="${escapeHtml(song.id)}">${appState.activePlayer?.songId === song.id && appState.activePlayer?.mode === 'full' ? '■ 停止全曲' : '▶ 播放全曲'}</button>` : ''}
                       <button type="button" class="act-btn ${appState.activePlayer?.songId === song.id && appState.activePlayer?.mode === 'preview' ? 'playing' : ''}" data-play-preview="${escapeHtml(song.id)}">${appState.activePlayer?.songId === song.id && appState.activePlayer?.mode === 'preview' ? '■ 停止片段' : '♪ 30秒试听'}</button>
                       ${song.verification?.sourceUrl ? `<a class="act-btn" href="${escapeHtml(song.verification.sourceUrl)}" target="_blank" rel="noopener noreferrer">资料来源 ↗</a>` : ''}
+                      ${officialLyricsUrl(song) ? `<a class="act-btn" href="${escapeHtml(officialLyricsUrl(song))}" target="_blank" rel="noopener noreferrer">完整歌词 ↗</a>` : ''}
                       <button type="button" class="act-btn" data-copy-song="${escapeHtml(song.id)}">复制摘录</button>
                       <button type="button" class="act-btn ${liked ? 'liked' : ''}" data-like-song="${escapeHtml(song.id)}">${liked ? '♥ 已点赞' : '♡ 点赞'}</button>
                       <div class="dislike-wrap">
@@ -2130,7 +2141,7 @@
                   <div style="display:flex; gap:6px; align-items:center;">
                     <span class="pill">${escapeHtml(s.emotion)}</span>
                     <span class="pill pill-gold">${escapeHtml(s.technique)}</span>
-                    ${(audioSources(s).length || s.audio?.youtubeId) ? `<button type="button" class="icon-btn" data-likes-play-full="${escapeHtml(s.id)}">▶ 播放全曲</button>` : ''}<button type="button" class="icon-btn" data-likes-play-preview="${escapeHtml(s.id)}">♪ 试听</button><button type="button" class="icon-btn" data-unlike-song="${escapeHtml(s.id)}">移除</button>
+                    ${(audioSources(s).length || s.audio?.youtubeId) ? `<button type="button" class="icon-btn" data-likes-play-full="${escapeHtml(s.id)}">▶ 播放全曲</button>` : ''}${officialLyricsUrl(s) ? `<a class="icon-btn" href="${escapeHtml(officialLyricsUrl(s))}" target="_blank" rel="noopener noreferrer">完整歌词 ↗</a>` : ''}<button type="button" class="icon-btn" data-likes-play-preview="${escapeHtml(s.id)}">♪ 试听</button><button type="button" class="icon-btn" data-unlike-song="${escapeHtml(s.id)}">移除</button>
                   </div>
                 </div>
                 <div style="font-family:var(--font-serif); font-size:15.5px; line-height:1.85; color:var(--text-secondary);">
