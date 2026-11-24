@@ -1343,7 +1343,7 @@ async function main() {
   if(validSongs.length<10 && round<2) {
     const missingChinese=7-validSongs.filter(s=>s.language==='中文').length;
     const missingForeign=3-validSongs.filter(s=>s.language==='外文').length;
-    const refill = await callGeminiJson(buildDailyPrompt({dateInfo,history,blacklist,prefs})+`\n【补选轮次】已有 ${validSongs.length} 首核验通过。请只返回 {"songs":[...]}。本轮候选提供 ${Math.max(0,missingChinese*2)} 首中文和 ${Math.max(0,missingForeign*2)} 首外文，保持每首歌词、分析和标签字段完整。不要重复这些已尝试曲目：${[...attemptedKeys].join('、')}。上轮失败：${JSON.stringify(rejected)}。优先选官方词库可检索的真实原词。`);
+    const refill = await callGeminiJson(buildDailyPrompt({dateInfo,history,blacklist,prefs})+`\n【补选轮次】已有 ${validSongs.length} 首核验通过。请只返回 {"songs":[...]}。本轮候选提供 ${Math.max(0,missingChinese*2)} 首中文和 ${Math.max(0,missingForeign*2)} 首外文，保持每首歌词、分析和标签字段完整。不要重复这些已尝试曲目：${[...attemptedKeys].join('、')}。上轮失败：${JSON.stringify(rejected)}。每首歌必须截取 8-14 行（约 10 行）真实原词，优先选官方词库可检索的真实原词。`);
     candidates=(refill.songs || []).map((song,i)=>({...song,id:`replacement-${round}-${i}`}));
   }
   }
