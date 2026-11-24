@@ -36,28 +36,7 @@ export function extractYoutubeId(urlOrId = '') {
   const m = s.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
   return m ? m[1] : '';
 }
-
-// Only use official platform players; no proxying or bypassing paid audio.
-export async function resolveAudioSources(title, artist, supplied = []) {
-  const valid = (Array.isArray(supplied) ? supplied : []).filter(s =>
-    (s.provider === 'spotify' && /^[a-zA-Z0-9]{22}$/.test(String(s.id))) ||
-    (s.provider === 'netease' && /^\d+$/.test(String(s.id))) ||
-    (s.provider === 'qq' && /^[a-zA-Z0-9]{10,20}$/.test(String(s.id))) ||
-    (s.provider === 'bandcamp' && /^https:\/\/bandcamp\.com\/EmbeddedPlayer\/(album|track)=\d+/.test(s.embed || ''))
-  );
-  try {
-    const params = new URLSearchParams({s:`${title} ${artist}`,type:'1',offset:'0',limit:'8'});
-    const response = await fetch(`https://music.163.com/api/search/get/web?${params}`, {signal:AbortSignal.timeout(12000)});
-    const data = await response.json();
-    const normalize = text => normalizeText(text).replace(/[^\p{L}\p{N}]/gu,'');
-    const sameArtist = name => normalize(name)===normalize(artist) || (/[\u3400-\u9fff]/.test(artist) && normalize(name).replace(/[^\u3400-\u9fff]/g,'')===normalize(artist).replace(/[^\u3400-\u9fff]/g,''));
-    const hit = (data.result?.songs || []).find(s => normalize(s.name)===normalize(title) && (s.artists || []).some(a=>sameArtist(a.name)));
-    // The official player resolves access in the visitor's region and login session.
-    // A missing stream URL in a CI runner's region must not hide that audio player.
-    if (hit) valid.push({provider:'netease',id:String(hit.id)});
-  } catch (error) { console.warn('[audio] 音频检索不可用：', error.name); }
-  return valid;
-}
+export async function resolveAudioSources(title, artist, supplied = []) { return (Array.isArray(supplied) ? supplied : []).filter(s => (s.provider === 'spotify' && /^[a-zA-Z0-9]{22}$/.test(String(s.id))) || (s.provider === 'bandcamp' && /^https:\/\/bandcamp\.com\/EmbeddedPlayer\/(album|track)=\d+/.test(s.embed || ''))); }
 
 
 export async function resolveYoutubeId(value) {
