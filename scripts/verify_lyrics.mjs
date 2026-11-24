@@ -37,7 +37,7 @@ export function isBlockedByKtvList(title, artist, blacklistConfig) {
  * 调用 LRCLIB 核验单首歌词摘录的真实性
  * 返回 { ok, matchedRatio, matchedCount, totalLines, sourceName, sourceUrl, reason }
  */
-export async function verifySongWithLrclib(song) {
+async function verifySongWithLrclibOnly(song) {
   const lines = Array.isArray(song.lines) ? song.lines.filter((l) => l.trim().length > 0) : [];
   if (lines.length < 4) {
     return { ok: false, reason: `歌词行数不足（${lines.length} 行，至少需要 4 行）` };
@@ -55,7 +55,7 @@ export async function verifySongWithLrclib(song) {
       artist_name: song.artist
     });
     const res = await fetch(`${LRCLIB_SEARCH}?${query.toString()}`, {
-      headers: { 'User-Agent': 'LingganCikuBot/1.0 (https://github.com)' }
+      headers: { 'User-Agent': 'LingganCikuBot/1.0 (https://github.com)' }, signal: AbortSignal.timeout(15000)
     });
     if (!res.ok) {
       return { ok: false, reason: `LRCLIB 接口返回 ${res.status}` };
@@ -108,4 +108,26 @@ export async function verifySongWithLrclib(song) {
   } catch (err) {
     return { ok: false, reason: `核验网络异常：${err.message}` };
   }
+}
+
+
+// Official NetEase metadata resolves Chinese artist names that LRCLIB stores in Latin script.
+export async function verifySongWithLrclib(song) {
+  const primary = await verifySongWithLrclibOnly(song);
+  if (primary.ok || !Array.isArray(song.lines) || song.lines.length < 4) return primary;
+  try {
+    const query = new URLSearchParams({s:`${song.title} ${song.artist}`,type:'1',limit:'10'});
+    const search = await fetch(`https://music.163.com/api/search/get/web?${query}`,{signal:AbortSignal.timeout(15000)});
+    const tracks = (await search.json()).result?.songs || [];
+    const track = tracks.find(item => normalizeText(item.name)===normalizeText(song.title) && (item.artists || []).some(artist=>normalizeText(artist.name)===normalizeText(song.artist)));
+    if (!track) return primary;
+    const response = await fetch(`https://music.163.com/api/song/lyric?id=${track.id}&lv=-1&kv=-1&tv=-1`,{signal:AbortSignal.timeout(15000)});
+    const data = await response.json();
+    const lyrics = normalizeText((data.lrc?.lyric || '').replace(/\[[^\]]*\]/g,''));
+    const lines = song.lines.filter(line=>line.trim());
+    const matchedCount = lines.filter(line=>normalizeText(line).length>=4 && lyrics.includes(normalizeText(line))).length;
+    const matchedRatio = matchedCount / lines.length;
+    if(matchedRatio >= .65) return {ok:true, matchedRatio, matchedCount,totalLines:lines.length,sourceName:'网易云官方原词核验',sourceUrl:`https://music.163.com/song?id=${track.id}`};
+    return {...primary,reason:`${primary.reason}；网易云原词命中 ${Math.round(matchedRatio*100)}%`};
+  } catch(error) {return {...primary,reason:`${primary.reason}；备用核验失败：${error.name}`};}
 }
