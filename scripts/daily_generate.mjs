@@ -4,7 +4,7 @@
  *
  * 环境变量：
  *   GEMINI_API_KEY       必填，Google AI Studio / Gemini API Key
- *   GEMINI_MODEL         可选，默认 gemini-2.5-flash
+ *   GEMINI_MODEL         可选，默认 gemini-3.8-flash
  *   FEEDBACK_API_URL     可选，Cloudflare Worker 状态接口（如 https://xxx.workers.dev/api/state）
  *   FEEDBACK_API_TOKEN   可选，Worker 鉴权 Bearer Token
  *   TARGET_DATE          可选，指定生成日期 YYYY-MM-DD（默认按北京时间当天）
@@ -14,7 +14,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isBlockedByKtvList, normalizeText, verifySongWithLrclib } from './verify_lyrics.mjs';
-import { extractYoutubeId, resolveItunesPreview } from './resolve_audio.mjs';
+import { extractYoutubeId, resolveItunesPreview, resolveAudioSources } from './resolve_audio.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -104,7 +104,7 @@ async function fetchUserPreferences() {
 async function callGeminiJson(prompt) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('缺少环境变量 GEMINI_API_KEY');
-  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+  const model = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
   const res = await fetch(endpoint, {
@@ -180,7 +180,7 @@ function buildDailyPrompt({ dateInfo, history, blacklist, prefs }) {
       "lines": ["..."],
       "translations": [],
       "reason": "1-2句编辑收录依据",
-      "audio": { "youtubeId": "11位官方YouTube视频ID（若联网检索到则填，否则留空）", "previewUrl": "" },
+      "audio": { "youtubeId": "11位官方YouTube视频ID（若联网检索到则填，否则留空）", "previewUrl": "", "sources": [{"provider":"spotify 或 netease 或 qq 或 bandcamp","id":"联网检索到的真实曲目 ID；找不到则整个 sources 留空数组。Bandcamp 用 embed 字段填官方 EmbeddedPlayer URL"}] },
       "verification": { "status": "verified", "method": "联网核验", "sourceName": "...", "sourceUrl": "https://..." }
     }
   ],
@@ -248,6 +248,7 @@ async function main() {
       const itunes = await resolveItunesPreview(song.title, song.artist);
       song.audio = {
         youtubeId: extractYoutubeId(song.audio?.youtubeId || ''),
+        sources: await resolveAudioSources(song.title, song.artist, song.audio?.sources),
         previewUrl: itunes?.previewUrl || '',
         appleMusicUrl: itunes?.appleMusicUrl || ''
       };
@@ -264,11 +265,20 @@ async function main() {
   }
 
   // 重新编号并过滤重复金句与超长金句
+  const oldIds = validSongs.map(s=>s.id);
   draft.songs = validSongs.map((s, i) => ({
     ...s,
     id: `${dateInfo.date}-${String(i + 1).padStart(2, '0')}`,
     index: String(i + 1).padStart(2, '0')
   }));
+
+  if (draft.neigong) {
+    draft.neigong.date = dateInfo.date;
+    draft.neigong.linkedSongIds = (draft.neigong.linkedSongIds || []).flatMap(id=>{const index=oldIds.indexOf(id);return index<0 ? [] : [draft.songs[index].id];});
+  }
+  draft.date = dateInfo.date;
+  draft.displayDate = dateInfo.displayDate;
+  draft.summary = `${draft.songs.length} 首核验歌词 · ${(draft.quotes || []).length} 条金句 · 1 篇内功`;
 
   draft.quotes = (draft.quotes || [])
     .filter((q) => q.text && q.text.length <= 200 && !history.quoteTexts.has(normalizeText(q.text).slice(0, 24)))
