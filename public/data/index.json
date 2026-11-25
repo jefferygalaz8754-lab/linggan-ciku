@@ -1,7 +1,15 @@
 {
-  "latest": "2026-11-24",
-  "updatedAt": "2026-11-24T09:00:10.188Z",
+  "latest": "2026-11-25",
+  "updatedAt": "2026-11-25T00:51:14.227Z",
   "issues": [
+    {
+      "date": "2026-11-25",
+      "displayDate": "2026年11月25日 星期三",
+      "neigongTitle": "量化置换与价值背书：用世俗契约解构虚无心象",
+      "coreTechnique": "量化置换与价值背书",
+      "songCount": 10,
+      "quoteCount": 19
+    },
     {
       "date": "2026-11-24",
       "displayDate": "2026年11月24日 星期二",
