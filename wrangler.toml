@@ -1,0 +1,7 @@
+name = "linggan-ciku"
+pages_build_output_dir = "./public"
+compatibility_date = "2026-01-01"
+
+[[kv_namespaces]]
+binding = "INVITE_STATE"
+id = "e715e7856c4448b2aad9c8c20afaf325"
